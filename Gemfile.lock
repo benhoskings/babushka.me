@@ -69,7 +69,7 @@ GEM
     mime-types (1.19)
     multi_json (1.5.0)
     multi_xml (0.5.1)
-    newrelic_rpm (3.5.0)
+    newrelic_rpm (3.5.7.59)
     pg (0.14.1)
     polyglot (0.3.3)
     rack (1.4.5)
