@@ -37,14 +37,14 @@ The bootstrap script prompts for confirmation and an install prefix. If you're s
 
 ## Versions
 
-You can pass a git ref to `babushka.me/up` to install a different babushka version. The default is `master`.
+You can pass a git ref to `babushka.me/up` to install a different babushka version. The default is `stable`.
 
     sh -c "`curl babushka.me/up/<ref>`"
 
 You can supply any ref that github serves as a tarball. Some common ones:
 
-- `master` is the latest stable version (perhaps with a small hotfix or two). I merge to master when I bump the version number, and it always fast-forwards.
-- `next` is the development tip. I develop on `next` locally, and push when the specs are green. This branch won't necessarily fast-forward.
+- `stable` is the latest stable version. I update stable when I bump the version number, and it always fast-forwards (usually to `master`'s HEAD at the time).
+- `master` is the development tip. I work on `master` locally, merging topic branches into it, and push to origin when the specs are green. The current `master` tip is always a descendant of the current `stable` tip.
 
 
 ## gem or it didn't happen
