@@ -44,7 +44,7 @@ You can pass a git ref to `babushka.me/up` to install a different babushka versi
 You can supply any ref that github serves as a tarball. Some common ones:
 
 - `stable` is the latest stable version. I update stable when I bump the version number, and it always fast-forwards (usually to `master`'s HEAD at the time).
-- `master` is the development tip. I work on `master` locally, merging topic branches into it, and push to origin when the specs are green. The current `master` tip is always a descendant of the current `stable` tip.
+- `master` is the development tip. I work on master locally, merging topic branches into it, and push to origin when the specs are green. Its tip is always a descendant of the current `stable` tip.
 
 
 ## gem or it didn't happen
