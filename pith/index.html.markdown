@@ -7,9 +7,8 @@ title: Babushka
 Babushka is a tool for
 [finding](/finding-deps),
 [running](/running-deps),
-[writing](/writing-deps)
 and
-[sharing](/sharing-deps)
+[writing](/writing-deps)
 recipes to automate things.
 </strong>
 
