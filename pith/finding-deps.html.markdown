@@ -3,21 +3,8 @@ layout: "/_layout.html.haml"
 title: Finding deps
 ---
 
-## Searching for Deps
+You can search on github for deps you might like to use, using the term 'babushka-deps'.
 
-Whenever a public dep is run with babushka, the result is recorded anonymously in a public database at babushka.me. You can query this database using babushka's `search` subcommand: it returns a list of matching deps, along with a measure of their popularity and reliability.
-
-A public dep is a dep whose source has a public URL -- something like `git://` or `http://`. There's more information dep sources [here](/dep-sources), but for now: a dep is public when you run it directly from someone's public source; otherwise, it's probably private.
-
-To find, say, deps about coffee, run this command:
-
-    $ babushka search coffee
-
-You'll see a table of results returned by the web service.
-
-The webservice has a public API that babushka accesses. You can hit the API directly if you like; the search url is `/deps/search.json/<query>`. More details are in the app's [routing table](https://github.com/benhoskings/babushka.me/blob/master/config/routes.rb).
-
-Because it's truly anonymous, the results are gameable. Please refrain from taking advantage of that. :)
 
 ## Trust
 
