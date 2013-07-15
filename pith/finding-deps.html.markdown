@@ -3,7 +3,7 @@ layout: "/_layout.html.haml"
 title: Finding deps
 ---
 
-You can search on github for deps you might like to use, using the term 'babushka-deps'.
+You can [search on github](https://github.com/search?q=babushka-deps) for deps you might like to use, using the term 'babushka-deps'.
 
 
 ## Trust
