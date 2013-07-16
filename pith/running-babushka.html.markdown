@@ -42,10 +42,32 @@ Although babushka is predominantly a commandline app, it's not implemented that 
 
     $ babushka console
 
+To properly recreate the runtime environment, mix in the babushka DSL:
+
+    >> include Babushka::DSL
+
+Here are some brief examples for using the console. To meet a dep:
+
+    >> Dep('rubygems').meet
+
+To check if a dep is met (i.e. what `--dry-run` does):
+
+    >> Dep('homebrew').met?
+
+To run shell commands using babushka:
+
+    >> include Babushka::ShellHelpers
+    >> shell './configure', '--prefix=/usr/local', log: true
+
+To run basic git operations:
+
+    >> repo = Babushka::GitRepo.new('/some/path')
+    >> repo.branches.include?('topic')
+
 
 ## Using babushka as a library
 
-All that does is start an irb session, requiring 'lib/babushka'. Everything will work as expected if you require 'lib/babushka' in a program of your own and then use babushka programatically.
+All the babushka console does is start an irb session, requiring 'lib/babushka'. Hence, everything will work as expected if you require 'lib/babushka' in a program of your own and then use babushka programatically.
 
 The top-level methods like `dep` and `meta` won't be included by default; you can `include Babushka::DSL` to add them to whatever scope you like.
 
