@@ -59,3 +59,24 @@ title: How deps work
   - If `meet` exports a variable in your shell config, then `met?` should fork a shell and check it's set.
 
   In short, `met?` should check `meet`'s intent, not its implementation: it should check the what, not the how.
+
+
+  ## Requirements
+
+  Another point to note is that when you're writing a dep, you shouldn't have to think very much outside it -- the dep should be context-free, much like a function should encapsulate a piece of logic without regard for the context in which it's called.
+
+  As long as the correct requirements are specified, babushka will sort out the context for you, and you can write each dep independently, passing the required arguments around.
+
+  For example, a dep assigning database permissions requires an existing database, and so should require a dep that checks for it, creating it if necessary.
+
+      dep 'db access', :db_name do
+        requires 'db exists'.with(db_name)
+        met? {
+          # Check if we can read something from the database
+        }
+        meet {
+          # Assign the correct permissions to the database
+        }
+      end
+
+  With that requirement, the met? and meet logic in 'db exists' can just assume that the database already exists. We don't need any "if db_exists" conditionals in this dep: that's not relevant in this context, thanks to the requirement.
