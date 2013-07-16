@@ -21,7 +21,43 @@ title: Running Deps
       http://github.com/benhoskings/babushka-deps
 
 
-  The idea with deps, though, is to make them small and self-contained, specifying each dep's immediate requirements as a list of other deps. Babushka looks up these deps in just the same way as it looks up deps passed on the commandline.
+  ## A runtime example
+
+  Here's what babushka does when you run 'Cucumber.tmbundle' from my source, to install the Cucumber TextMate bundle. Each step of the way, it's checking what should be done, and only doing the bits that aren't done already. (In babushka parlance, it's only meeting deps that aren't already met.)
+
+  If you already have TextMate installed, babushka notices and just installs the bundle.
+
+      $ babushka benhoskings:Cucumber.tmbundle
+      Cucumber.tmbundle {
+        TextMate.app {
+          Found TextMate.app in /Applications.
+        } ✓ TextMate.app
+        meet {
+          Cloning git://github.com/bmabey/cucumber-tmbundle.git... at bb89925, done.
+          Telling TextMate to reload bundles... done.
+        }
+      } ✓ Cucumber.tmbundle
+
+
+  But if you don't have TextMate, that's an unmet dependency, so it gets pulled in too.
+
+      $ babushka benhoskings:Cucumber.tmbundle
+      Cucumber.tmbundle {
+        TextMate.app {
+          Couldn't find TextMate.app.
+          meet {
+            ✓ Already downloaded TextMate_1.5.10.zip.
+            Extracting TextMate_1.5.10.zip... done.
+            Found TextMate.app, copying to /Applications... done.
+            Cleaning up... done.
+          }
+          Found TextMate.app in /Applications.
+        } ✓ TextMate.app
+        meet {
+          Cloning git://github.com/bmabey/cucumber-tmbundle.git... at bb89925, done.
+          Telling TextMate to reload bundles... done.
+        }
+      } ✓ Cucumber.tmbundle
 
 
   ## Passing arguments to deps
