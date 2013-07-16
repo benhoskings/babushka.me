@@ -52,7 +52,7 @@ title: How deps work
 
   ## What, not how
 
-  This implies an important part of the design: the `met?` block shouldn't just directly check that `meet` did a piece of work; that would just be trivial repetition. Instead, A good test checks the _result_ of the work. For example:
+  This implies an important part of the design: the `met?` block shouldn't just directly check that `meet` did a piece of work; that would be trivial repetition. Instead, A good test checks the _result_ of the work. For example:
 
   - If `meet` starts the webserver, then `met?` should check there's something listening on port 80.
   - If `meet` bundles your app, then `met?` should run `bundle --check`.
