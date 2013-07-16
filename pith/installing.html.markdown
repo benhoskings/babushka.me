@@ -14,7 +14,7 @@ If your system doesn't ship with curl, you can install it first. Here are some e
     pacman -S curl && sh -c "`curl https://babushka.me/up`" # on Arch Linux
     apt-get install -y curl && sh -c "`curl https://babushka.me/up`" # on Ubuntu Linux
 
-Some other Linux distros ship with `wget` instead. Many of these stock `wget` installs lack openssl, which means no https downloads. You could install curl first (which should pull in openssl; see above), or just cowboy it over `http://` with wget:
+Some other Linux distros ship with `wget` instead. Many of these stock wget installs lack openssl, which means no https downloads. You could install curl first (which should pull in openssl; see above), or just cowboy it over http with wget:
 
     sh -c "`wget -O - babushka.me/up`" # Hijack me, please!
 
