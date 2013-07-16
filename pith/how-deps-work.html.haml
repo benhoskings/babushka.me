@@ -42,6 +42,13 @@ title: How deps work
 
   I like to think of an unmet dep's `met?` block as a failing test, and `meet` as the code that makes that test pass.
 
+  Take [the rubygems dep](https://github.com/benhoskings/babushka/blob/master/deps/rubygems.rb) as an example:
+
+  - The `met?` check confirms `gem` is in the path and its version is recent enough.
+  - The `meet` block unconditionally installs the latest babushka.
+
+  Things like rubygems aren't hard to install on their own, but with babushka it's fast and predictable: the job is done just right, every time.
+
 
   ## What, not how
 

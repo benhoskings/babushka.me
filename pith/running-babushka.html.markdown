@@ -23,7 +23,12 @@ To run deps, use the "meet" subcommand, passing the dep names you're after as ar
 
     $ babushka rubygems
 
-Note that this doesn't mean "install rubygems"; that's too imperative. Instead, it means "check whether rubygems is up-to-date, installing or updating as required". For more info, read about [how deps work](http://babushka.me/how-deps-work).
+Note that this doesn't mean "install rubygems"; that's too imperative. Instead, it means "check whether rubygems is up-to-date, installing or updating as required". It's the goal that's important, not the action that might get you there. For more info, read about [how deps work](http://babushka.me/how-deps-work).
+
+If something isn't working, you have a list of things that _aren't_ the culprit: everything in the output with a green ✓ beside it. Conversely, if babushka can detect the problem, the failing dep will have a red ✗ beside it instead, which leads you straight to the cause of the problem. Test-driven sysadmin!
+
+
+## Options
 
 There are several useful options to use when running deps. One to try out now is `--dry-run`, which will just check whether the dep in question (and its requirements) are met, without changing your system; babushka won't attempt to meet unmet deps.
 
