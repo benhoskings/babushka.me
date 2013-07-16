@@ -13,7 +13,7 @@ title: Overview
 
   ## Sounds lofty.
 
-  I promise it isn't. The idea is to write little snippets of ruby that do those jobs you can never remember exactly off the cuff.
+  I promise it isn't. The babushka idea is to use little snippets of ruby that do those jobs you can never remember exactly off the cuff. In each one, an action, and a corresponding test.
 
 :preruby
   dep 'public key' do
@@ -33,6 +33,8 @@ title: Overview
 
 
   Babushka starts with `met?`, which in this case returned something falsey -- a failing test. Next, it called `meet`, which generated a new key, throwing away the return value. And now `met?` returns true-ish, which means that running `meet` made the failing `met?` test pass. Success!
+
+  This "met, meet, met" behaviour defines how babushka works. A failing test, the action to make it pass, and then the test again, hopefully passing.
 
   If we run it a second time, we see this:
 
