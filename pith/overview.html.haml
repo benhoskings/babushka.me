@@ -49,6 +49,10 @@ title: Overview
 
   Deps are written in a declarative style, which makes them a good reference too. Reading over the `'public key'` dep above, you check if you have a public key by inspecting `~/.ssh/id_dsa.pub`, and you generate a new one by running `ssh-keygen` with a certain set of options.
 
+  The idea is maximising that signal-to-noise ratio: as much of the code in the dep above should be talking about ssh keys, not about other things that can be inferred elsewhere.
+
+  Notice also that there's no conditional logic within the dep. That's by design: the conditional stuff is handled by babushka; the dep's job is to define seperate, unconditional chunks of logic for babushka to work with.
+
 
   ## Design priorities
 
