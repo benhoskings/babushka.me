@@ -74,4 +74,4 @@ Then you can run babushka with `./bin/babushka.rb`, or if you like, symlink it i
 
 ## My kingdom for a gem
 
-Even though babushka is a ruby app, there's no gem distribution. The reason for this is that setting up a particular ruby build, rubygems, and maybe rvm or rbenv along the way is just the kind of thing babushka is good at. So in the interests of consistency, I recommend installing babushka via git repo every time, whether or not you use `babushka.me/up` to do it.
+Even though babushka is a ruby app, there's no gem distribution. The reason for this is that setting up a particular ruby build, rubygems, and maybe rbenv or chruby along the way is just the kind of thing babushka is good at. So in the interests of consistency, I recommend installing babushka via git repo every time, whether or not you use `babushka.me/up` to do it.
