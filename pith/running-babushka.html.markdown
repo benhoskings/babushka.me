@@ -6,25 +6,34 @@ title: Running babushka
 
 ## Commandline Syntax
 
-Babushka's commandline syntax is a subcommand & options style, similar to `git` and `gem`. To see the subcommands available, you can run
+Babushka uses the subcommand & options commandline style, similar to `git`, `gem` and `bundle`. To see the commands available:
 
     $ babushka help
 
-To run deps, use the "meet" subcommand, passing the dep names you're after as arguments. But "meet" is also the default subcommand, so the best way to run deps is to just pass them as arguments, straight up. For example, to run the "rubygems" dep:
-
-    $ babushka rubygems
-
-There are several useful options to use when running deps. The one you'll be after most regularly is `--debug`, which makes babushka much more verbose. In particular, output from long-running shell commands will be printed in realtime.
-
-    $ babushka rubygems --debug
-
-Two other commonly used options for "meet" are `--dry-run`, to check whether deps are met without meeting them, and `--defaults`, to run babushka non-interactively so it doesn't prompt for input at runtime.
-
-For more details on options and arguments, see the "help" output for a specific subcommand:
+For more details on options and arguments, check the help output for a specific subcommand:
 
     $ babushka help meet
 
 You can abberviate subcommands as long as they remain unique. All the subcommands except 'sources' and 'search' can be abbreviated to a single letter without any ambiguity.
+
+
+## Running deps
+
+To run deps, use the "meet" subcommand, passing the dep names you're after as arguments. But "meet" is also the default subcommand, so the best way to run deps is to just pass them as arguments, straight up. For example, to run the built-in "rubygems" dep:
+
+    $ babushka rubygems
+
+Note that this doesn't mean "install rubygems"; that's too imperative. Instead, it means "check whether rubygems is up-to-date, installing or updating as required". For more info, read about [how deps work](http://babushka.me/how-deps-work).
+
+There are several useful options to use when running deps. One to try out now is `--dry-run`, which will just check whether the dep in question (and its requirements) are met, without changing your system; babushka won't attempt to meet unmet deps.
+
+    $ babushka rubygems --dry-run
+
+When writing deps, the option you'll be after most regularly is `--debug`, which makes babushka much more verbose. In particular, output from long-running shell commands will be printed in realtime.
+
+    $ babushka rubygems --debug
+
+A third useful option is `--defaults`, which causes babushka to run non-interactively so it doesn't prompt for input at runtime.
 
 
 ## The babushka console
