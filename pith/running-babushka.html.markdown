@@ -14,7 +14,7 @@ For more details on options and arguments, check the help output for a specific 
 
     $ babushka help meet
 
-You can abberviate subcommands as long as they remain unique. All the subcommands except 'sources' and 'search' can be abbreviated to a single letter without any ambiguity.
+You can abbreviate subcommands as long as they remain unique; at present, each one can be abbreviated to a single letter without any ambiguity.
 
 
 ## Running deps
