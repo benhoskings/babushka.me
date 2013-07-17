@@ -76,10 +76,12 @@ body {
 
 a {
   text-decoration: none;
-  &:link, &:visited {
-    color: #ff3300; }
+  color: black;
+  border-bottom: none;
   &:hover {
-    color: #ff9900; } }
+    border-bottom: 2px #999 solid;
+  }
+}
 
 img {
   border: none;
@@ -184,11 +186,8 @@ body .nav-wrapper {
       h1, h2 {
         margin: 0;
       }
-      h2, p, p a {
-        float: left;
-      }
-      h2, p a {
-        padding-right: 1ex;
+      h2, p {
+        display: inline-block;
       }
       h2 {
         text-transform: lowercase;
@@ -201,8 +200,6 @@ body .nav-wrapper {
         a {
           text-transform: lowercase;
           font-size: 12px;
-          color: #666;
-          &:link, &:visited { color: #666; }
           &:after {
             content: ',';
           }
@@ -217,15 +214,25 @@ body .nav-wrapper {
 }
 
 body >article {
-  margin: $leading;
-  margin-left: $leading + $doll-width + $leading;
+  width: $article-width;
+  margin: 0 auto;
+  padding: 0 $leading;
   margin-bottom: $leading * 2;
-  >* {
-    width: $article-width;
-  }
   li {
     list-style-type: square;
   }
+
+  a {
+    border-bottom: 2px #ff3300 solid;
+    &:link, &:visited {
+      color: #ff3300;
+    }
+    &:hover {
+      color: #ff9900;
+      border-bottom-color: #ff9900;
+    }
+  }
+
   $caption-width: $article-width * 0.5;
   figure.precaption {
     width: $article-width + $caption-width + $leading;
