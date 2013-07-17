@@ -36,19 +36,39 @@ If there's no source at `~/.babushka/sources/conversation` then babushka will cl
 
 There's one exception to this rule: the source name 'common' corresponds not to the github user 'common' (sorry, Common), but to [benhoskings/common-babushka-deps](http://github.com/benhoskings/common-babushka-deps). In that source, I maintain some deps for common tasks useful to all babushka users, like deploying apps via git repo.
 
-If you'd like to use a source that doesn't follow the above convention, then you can add it yourself, specifying a custom name:
 
-    $ babushka sources --add custom git://example.org/a/custom/dep-source.git
+## Customising sources
 
-That command will clone `git://example.org/a/custom/dep-source.git` to `~/.babushka/sources/custom`.
+The convention system is only a starting point: you can use it as much or as little as you like. Babushka identifies sources purely by name, and only uses the convention to clone sources that aren't present by name (i.e. when `~/.babushka/sources/<name>` doesn't exist).
 
-This system is configuration-free apart from the repos themselves: the source names are the directory names, and the URLs are the locations of the corresponding 'origin' git remotes. Hence, you can add sources manually, or make them available in a base VM image, etc, by placing the repo in `~/.babushka/sources` yourself:
+When the source does exist by name, then babushka will happily load from it, no matter where it came from. This makes it very easy to add custom sources, or make sources available in a base VM image, etc. All you have to do is place the appropriate repos in `~/.babushka/sources`:
 
     cd ~/.babushka/sources
-    git clone git://example.org/a/custom/dep-source.git ./custom
+    git clone git://example.org/custom-dep-source.git ./custom
 
-Instead of cloning directly into `~/.babushka/sources`, you can symlink to other paths instead, and babushka will follow the symlinks when searching for sources.
+That will make a source called 'custom' available, from which you can invoke deps like so:
 
-You can name the git repos within `~/.babushka/sources` however you like, and then use those names whenever you reference deps. It's only when a named source isn't present already that the github URI convention is used.
+    babushka custom:'a custom dep'
 
-When `--update` is passed, babushka will update the sources from 'origin/master' before using them. As with the repo names, you can use any URI you like for the 'origin' remote, including private ones for which you have credentials, and babushka will follow your lead. It's only when automatically cloning that the convention is used to set the URI.
+(You can symlink instead of cloning directly into `~/.babushka/sources`; babushka follows symlinks when loading sources.)
+
+There's also a babushka command you can use to add sources. Internally, all it does it clone the repo; it's there purely as a convenience:
+
+    $ babushka sources --add custom git://example.org/custom-dep-source.git
+
+Running that command will clone `git://example.org/custom-dep-source.git` to `~/.babushka/sources/custom`.
+
+To recap, you can name the git repos within `~/.babushka/sources` however you like, and then use those names whenever you reference deps. It's only when a named source isn't present, and babushka auto-clones it, that its name and URI are set by convention.
+
+
+## Updating sources
+
+Babushka doesn't automatically update sources. If you push new or breaking changes to your source, you don't need to worry about breaking existing babushka setups; anywhere that source is cloned, it will stay put at its current version and continue to work.
+
+(In the olden days babushka did auto-update sources, but this behaviour caused too many "dammit, this worked yesterday" surprises.)
+
+The only time babushka will change existing sources is when it's run with the `--update` option. With this option specified, babushka will lazily update sources before it loads deps from them. That is, `--update` doesn't update all existing sources, just each relevant source as it's referenced down the tree. (A source is only updated (and loaded) once per run.)
+
+When updating, babushka fetches from 'origin' and then resets the source to 'origin/master'. There's a safety check, though, that will prevent updates if the source has uncommitted changes or unpushed commits, to avoid blowing away your local changes (babushka will print a message in this case).
+
+As with the repo names, you can use any URI you like for the 'origin' remote, including private URIs for which you have credentials, and babushka will follow your lead. It's only when automatically cloning that the github username convention is used to set the URI.
