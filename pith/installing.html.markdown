@@ -3,16 +3,19 @@ layout: "/_layout.html.haml"
 title: Installing babushka
 ---
 
-You can install babushka on your system, no matter what state it's in, using `babushka.me/up`. That's a script that knows enough to install ruby if required (babushka's only runtime dependency), and then download a temporary babushka that knows how to do the proper install.
+Babushka is best installed using `babushka.me/up`, a script that installs babushka via git (and some dependencies via your system's package manager). It's safe to run on existing systems; if you're running git and ruby already then all that's installed is babushka itself.
 
-The `babushka.me/up` script is designed to be the first command you can run on a new system. The only prerequisite, which most systems ship with, is something that can fetch over https. Mac OS X and some Linux distros ship with `curl`:
+The script is also designed to be used as the initial shell command on a brand new laptop or server. Its only prerequisite, which most systems ship with, is something that can fetch over https. Mac OS X and some Linux distros ship with `curl`:
 
     sh -c "`curl https://babushka.me/up`"
 
 If your system doesn't ship with curl, you can install it first. Here are some examples:
 
-    pacman -S curl && sh -c "`curl https://babushka.me/up`" # on Arch Linux
-    apt-get install -y curl && sh -c "`curl https://babushka.me/up`" # on Ubuntu Linux
+    # on Arch Linux
+    pacman -S curl && sh -c "`curl https://babushka.me/up`"
+
+    # on Ubuntu Linux
+    apt-get install -y curl && sh -c "`curl https://babushka.me/up`"
 
 Some other Linux distros ship with `wget` instead. Many of these stock wget installs lack openssl, which means no https downloads. You could install curl first (which should pull in openssl; see above), or just cowboy it over http with wget:
 
