@@ -21,7 +21,7 @@ Some other Linux distros ship with `wget` instead. Many of these stock wget inst
 
 ## What it does
 
-You can [view the script](http://babushka.me/up) in your browser to see what it does, or review [the template](https://github.com/benhoskings/babushka.me/blob/master/app/views/bootstrap/up.sh.erb) that it's rendered from.
+The script is fairly straightforward. Here's what it does:
 
 - Installs ruby & curl via your package manager, as required
 - Downloads a tarball of babushka from github
@@ -31,7 +31,9 @@ You can [view the script](http://babushka.me/up) in your browser to see what it 
   - Clones the babushka repo to `/usr/local/babushka`, or whatever you choose
   - Symlinks the executable to `/usr/local/bin`
 
-The script is fairly straightforward and doesn't make any surprising changes to your system. You can completely uninstall babushka by just deleting it:
+Here's [the script](http://babushka.me/up) and [the template](https://github.com/benhoskings/babushka.me/blob/master/app/views/bootstrap/up.sh.erb) that it's rendered from if you'd like to review them.
+
+Installing babushka doesn't make any surprising changes to your system. You can completely uninstall it by deleting it:
 
     rm -rf /usr/local/babushka /usr/local/bin/babushka
 
