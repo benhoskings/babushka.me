@@ -67,7 +67,7 @@ Babushka doesn't automatically update sources. If you push new or breaking chang
 
 (In the olden days babushka did auto-update sources, but this behaviour caused too many "dammit, this worked yesterday" surprises.)
 
-The only time babushka will change existing sources is when it's run with the `--update` option. With this option specified, babushka will lazily update sources before it loads deps from them. That is, `--update` doesn't update all existing sources, just each relevant source as it's referenced down the tree. (A source is only updated (and loaded) once per run.)
+The only time babushka will change existing sources is when it's run with the `--update` option. With this option specified, babushka will lazily update sources before it loads deps from them. That is, `--update` doesn't update all existing sources, just each relevant source as it's referenced down the tree. (A source is only updated once per run.)
 
 When updating, babushka fetches from 'origin' and then resets the source to 'origin/master'. There's a safety check, though, that will prevent updates if the source has uncommitted changes or unpushed commits, to avoid blowing away your local changes (babushka will print a message in this case).
 
