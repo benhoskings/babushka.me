@@ -238,9 +238,10 @@ body >article {
     }
   }
 
-  $caption-width: $article-width * 0.5;
+  $pre-width: $article-width * 0.6;
+  $caption-width: $article-width * 0.4 - $leading;
   figure.precaption {
-    width: $article-width + $caption-width + $leading;
+    width: $pre-width + $caption-width + $leading;
     overflow: hidden;
     border-bottom: $pre_border_color 1px solid;
     pre {
@@ -251,7 +252,7 @@ body >article {
       border-bottom: 0;
     }
     >pre {
-      width: $article-width;
+      width: $pre-width;
       float: left;
     }
     figcaption >pre {
