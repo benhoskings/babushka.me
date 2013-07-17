@@ -69,6 +69,7 @@ abbr,article,aside,canvas,figcaption,figure,footer,header,hgroup,nav,section {
 
 body {
   font: 13px/#{$leading} $body_font;
+  color: black;
   background: white;
   margin: 0 auto;
 }
