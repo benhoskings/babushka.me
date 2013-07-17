@@ -5,6 +5,12 @@
     %title== #{page.meta['title']} - babushka
     %link(href="/styles/styles.css" media="screen" rel="stylesheet" type="text/css")/
     %meta(content="pith 0.2.3" name="generator")/
+    :javascript
+      if (navigator.userAgent.match(/MSIE/)) {
+        ie_version = navigator.userAgent.match(/MSIE (\d+)/)[1]
+        document.getElementsByTagName('html')[0].className = 'ie' + ie_version
+      }
+
     /[if lte IE 8]
       :javascript
         // html5shiv MIT @rem remysharp.com/html5-enabling-script
