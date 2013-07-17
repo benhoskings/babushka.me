@@ -58,6 +58,28 @@ title: Running Deps
       } ✓ Cucumber.tmbundle
 
 
+  ## Options
+
+  There are several useful options to use when running deps. One to try out now is `--dry-run`, which will just check whether the dep in question (and its requirements) are met, without changing your system; babushka won't attempt to meet unmet deps.
+
+  Suppose the Cucumber bundle isn't installed. If we kick off a dry run of the same dep as above, then we'll see this:
+
+      $ babushka benhoskings:Cucumber.tmbundle --dry-run
+      Cucumber.tmbundle {
+        TextMate.app {
+          Found TextMate.app in /Applications.
+        } ✓ TextMate.app
+      } ~ Cucumber.tmbundle
+
+  Babushka has found that the bundle's requirement, TextMate, is met, but the bundle itself is unmet. But rather than attempt to meet the dep, it's just printed the state (indicated by '~') and exited (if any dep in the tree is unmet, babushka exits with a non-zero status). See the argument section below for another `--dry-run` example.
+
+  When writing deps, the option you'll be after most regularly is `--debug`, which makes babushka much more verbose. In particular, output from long-running shell commands will be printed in realtime.
+
+      $ babushka rubygems --debug
+
+  A third useful option is `--defaults`, which causes babushka to run non-interactively so it doesn't prompt for input at runtime.
+
+
   ## Passing arguments to deps
 
   Deps are, in some ways, like a method call - the outer block of the dep is run at the point the dep is defined, which happens lazily as it is invoked from its parent, or from the commandline if it's the top-level dep.
@@ -70,7 +92,22 @@ title: Running Deps
 
       $ babushka benhoskings:push! ref=HEAD remote=production
 
-  To pass arguments to a dep when you require it, use babushka's `String#with` method.
+  Here's a runtime example, passing the 'version' argument to babushka's builtin 'git' dep (we're also using `--dry-run` again here). If we pass a version that matches the installed version, then the dep is met:
+
+      $ babushka git version=1.8.0 --dry-run
+      git {
+        'git' runs from /usr/local/bin.
+        ✓ git is 1.8.3.1, which is >= 1.8.0.
+      } ✓ git
+
+  But if we pass a version newer than the one we have installed, the dep is unmet.
+
+      $ babushka git version=1.8.5 --dry-run
+      git {
+        'git' runs from /usr/local/bin.
+        git is 1.8.3.1, which isn't >= 1.8.5.
+      } ~ git
+
 
 :preruby
   dep 'custom nginx config' do

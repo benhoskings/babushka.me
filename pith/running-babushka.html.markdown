@@ -28,19 +28,6 @@ Note that this doesn't mean "install rubygems"; that's too imperative and not [h
 If something isn't working, you have a list of things that _aren't_ the culprit: everything in the output with a green ✓ beside it. Conversely, if babushka can detect the problem, the failing dep will have a red ✗ beside it instead, which leads you straight to the cause of the problem. Test-driven sysadmin!
 
 
-## Options
-
-There are several useful options to use when running deps. One to try out now is `--dry-run`, which will just check whether the dep in question (and its requirements) are met, without changing your system; babushka won't attempt to meet unmet deps.
-
-    $ babushka rubygems --dry-run
-
-When writing deps, the option you'll be after most regularly is `--debug`, which makes babushka much more verbose. In particular, output from long-running shell commands will be printed in realtime.
-
-    $ babushka rubygems --debug
-
-A third useful option is `--defaults`, which causes babushka to run non-interactively so it doesn't prompt for input at runtime.
-
-
 ## The babushka console
 
 Although babushka is predominantly a commandline app, it's not implemented that way. All the commandline functionality is available at a ruby console too:
