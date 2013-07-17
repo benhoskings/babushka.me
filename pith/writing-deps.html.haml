@@ -39,8 +39,9 @@ title: Writing deps
 :precaptionedruby
   dep 'work symlinked' do
     met? {
-      # The String#p patch expands the string and returns
-      # a Fancypath, which has lots of useful helpers.
+      # The String#p patch expands the string
+      # and returns a Fancypath, which has lots
+      # of useful helpers.
       "~/work".p.exists?
     }
   end
