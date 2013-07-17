@@ -69,14 +69,16 @@ title: How deps work
 
   For example, a dep assigning database permissions requires an existing database, and so should require a dep that checks for it, creating it if necessary.
 
-      dep 'db access', :db_name do
-        requires 'db exists'.with(db_name)
-        met? {
-          # Check if we can read something from the database
-        }
-        meet {
-          # Assign the correct permissions to the database
-        }
-      end
+:preruby
+  dep 'db access', :db_name do
+    requires 'db exists'.with(db_name)
+    met? {
+      # Check if we can read something from the database
+    }
+    meet {
+      # Assign the correct permissions to the database
+    }
+  end
 
+:md
   With that requirement, the met? and meet logic in 'db exists' can just assume that the database already exists. We don't need any "if db_exists" conditionals in this dep: that's not relevant in this context, thanks to the requirement.

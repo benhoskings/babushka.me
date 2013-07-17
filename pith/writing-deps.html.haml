@@ -23,15 +23,15 @@ title: Writing deps
 :precaptionedruby
   dep 'work symlinked'
 
-  \> babushka 'work symlinked'
+  $ babushka 'work symlinked'
   work symlinked {
   } ✓ work symlinked
-  \>
+  $
 
 
 :md
   That's the simplest dep there is: you don't need to supply a dep block if you have nothing to put in it. Since the `met?` and `meet` blocks both default to being empty, though, it's not very useful.
-  
+
   _An empty `met?` block defaults to true (so that deps that do nothing but require other deps act as passthroughs)._
 
   Let's add a `met?` block with a simple check.
@@ -45,12 +45,12 @@ title: Writing deps
     }
   end
 
-  \> babushka 'work symlinked'
+  $ babushka 'work symlinked'
   work symlinked {
     meet {
     }
   } ✗ work symlinked
-  \>
+  $
 
 :md
   This time, the logic we put in the `met?` block returned false (because `~/work` didn't exist). To see when that block is being run, let's add some logging:
@@ -64,14 +64,14 @@ title: Writing deps
     }
   end
 
-  \> babushka 'work symlinked'
+  $ babushka 'work symlinked'
   work symlinked {
     met?: false.
     meet {
     }
     met?: false.
   } ✗ work symlinked
-  \> 
+  $
 
 :md
   This shows that babushka is running the `met?` block twice: first to check, and then again after running `meet` (which is empty in this case). This is where `meet` comes in: it's a piece of logic that, when run, should make `met?` return true.
@@ -91,7 +91,7 @@ title: Writing deps
     }
   end
 
-  \> babushka 'work symlinked'
+  $ babushka 'work symlinked'
   work symlinked {
     met?: false.
     meet {
@@ -99,7 +99,7 @@ title: Writing deps
     }
     met?: true.
   } ✓ work symlinked
-  \>
+  $
 
 :md
   This is how deps work (detailed [here](/how-deps-work)): it's the work `meet` did on the system, not its return value, that matters. Once `meet` runs, the `met?` check is passing, and we're done.
