@@ -167,11 +167,10 @@ body .nav-wrapper {
     position: relative;
     section.doll {
       width: $doll-width;
-      h1 a {
+      img {
         position: absolute;
         bottom: 0;
         right: $leading;
-        border-bottom: none;
 
         -webkit-animation-name: jump;
         -webkit-animation-duration: 400ms;
