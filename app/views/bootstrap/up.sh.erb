@@ -9,7 +9,7 @@ ref=<%= ref %>
 # So: write a string in which ~$(whoami) is expanded, and run it in a subshell.
 home=$(sh -c "echo ~$(whoami)")
 
-from="https://github.com/benhoskings/babushka/archive/$ref.tar.gz"
+from=${TARBALL_URI:-"https://github.com/benhoskings/babushka/archive/$ref.tar.gz"}
 to="$home/.babushka/bootstrap"
 
 interactive=$([ -t 0 ] && echo 'true' || echo 'false')
