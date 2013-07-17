@@ -98,6 +98,10 @@ h1, h2, h3, p, pre, ul {
   margin: $leading 0;
 }
 
+ul ul {
+  margin: 0;
+}
+
 h1, h2 {
   font-size: 13px;
   text-transform: uppercase;
