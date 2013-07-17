@@ -2,7 +2,7 @@ $mono_font: Menlo, Monaco, monospace;
 $body_font: $mono_font;
 $leading: 24px;
 $doll-width: 75px;
-$layout-width: 760px;
+$layout-width: 640px;
 $article-width: $layout_width;
 $feature-width: 380px;
 $background_color: #fff;
@@ -166,7 +166,7 @@ body .nav-wrapper {
       h1 a {
         position: absolute;
         bottom: 0;
-        right: $leading * 3;
+        right: $leading;
         border-bottom: none;
 
         -webkit-animation-name: jump;
