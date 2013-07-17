@@ -157,7 +157,6 @@ body .nav-wrapper {
   nav {
     width: $layout-width;
     margin: 0 auto;
-
     padding: ($leading * 0.5) $leading;
     list-style: none;
 
@@ -185,9 +184,6 @@ body .nav-wrapper {
     }
 
     section {
-      &.doll { margin-left: 0; }
-      margin-right: $leading;
-      overflow: hidden;
       h1, h2 {
         margin: 0;
       }
@@ -213,7 +209,6 @@ body .nav-wrapper {
         }
       }
     }
-    overflow: hidden;
   }
 }
 
