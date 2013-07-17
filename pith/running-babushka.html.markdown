@@ -23,7 +23,7 @@ To run deps, use the "meet" subcommand, passing the dep names you're after as ar
 
     $ babushka rubygems
 
-Note that this doesn't mean "install rubygems"; that's too imperative and not [how deps work](http://babushka.me/how-deps-work). Instead, it means "check whether rubygems is up-to-date, installing or updating as required". It's the goal, not the action that gets you there, that's important. For more info, check the section on [running deps](/running-deps).
+Note that this doesn't mean "install rubygems"; that's too imperative and not [how deps work](/how-deps-work). Instead, it means "check whether rubygems is up-to-date, installing or updating as required". It's the goal, not the action that gets you there, that's important. For more info, check the section on [running deps](/running-deps).
 
 If something isn't working, you have a list of things that _aren't_ the culprit: everything in the output with a green ✓ beside it. Conversely, if babushka can detect the problem, the failing dep will have a red ✗ beside it instead, which leads you straight to the cause of the problem. Test-driven sysadmin!
 
