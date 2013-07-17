@@ -2,7 +2,7 @@ $mono_font: Menlo, Monaco, monospace;
 $body_font: $mono_font;
 $leading: 24px;
 $doll-width: 75px;
-$layout-width: 760px;
+$layout-width: 640px;
 $article-width: $layout_width;
 $feature-width: 380px;
 $background_color: #fff;
@@ -166,7 +166,7 @@ body .nav-wrapper {
       h1 a {
         position: absolute;
         bottom: 0;
-        right: $leading * 3;
+        right: $leading;
         border-bottom: none;
 
         -webkit-animation-name: jump;
@@ -238,9 +238,10 @@ body >article {
     }
   }
 
-  $caption-width: $article-width * 0.5;
+  $pre-width: $article-width * 0.6;
+  $caption-width: $article-width * 0.4 - $leading;
   figure.precaption {
-    width: $article-width + $caption-width + $leading;
+    width: $pre-width + $caption-width + $leading;
     overflow: hidden;
     border-bottom: $pre_border_color 1px solid;
     pre {
@@ -251,7 +252,7 @@ body >article {
       border-bottom: 0;
     }
     >pre {
-      width: $article-width;
+      width: $pre-width;
       float: left;
     }
     figcaption >pre {
