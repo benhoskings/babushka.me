@@ -34,7 +34,7 @@ The script is fairly straightforward. Here's what it does:
   - Clones the babushka repo to `/usr/local/babushka`, or whatever you choose
   - Symlinks the executable to `/usr/local/bin`
 
-Here's [the script](http://babushka.me/up) and [the template](https://github.com/benhoskings/babushka.me/blob/master/app/views/bootstrap/up.sh.erb) that it's rendered from if you'd like to review them.
+Here's [the script](https://babushka.me/up) and [the template](https://github.com/benhoskings/babushka.me/blob/master/app/views/bootstrap/up.sh.erb) that it's rendered from if you'd like to review them.
 
 Installing babushka doesn't make any surprising changes to your system. You can completely uninstall it by deleting it:
 
@@ -45,14 +45,14 @@ Installing babushka doesn't make any surprising changes to your system. You can 
 
 The bootstrap script prompts for confirmation and an install prefix. If you're scripting the install, fear not: it runs unconditionally, accepting the defaults for those prompts, if STDIN isn't attached to a terminal. If you'd like to run a prompt-less install at the terminal, just attach `STDIN` to `/dev/null` instead:
 
-    sh -c "`curl babushka.me/up`" </dev/null
+    sh -c "`curl https://babushka.me/up`" </dev/null
 
 
 ## Versions
 
 You can pass a git ref to `babushka.me/up` to install a different babushka version. The default is `stable`.
 
-    sh -c "`curl babushka.me/up/<ref>`"
+    sh -c "`curl https://babushka.me/up/<ref>`"
 
 You can supply any ref that github serves as a tarball. Some common ones:
 
