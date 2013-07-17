@@ -9,6 +9,7 @@ $feature-width: 380px;
 $background_color: #fff;
 $hover_color: #8e173f;
 $babushka_me_up_color: #333333;
+$pre_border_color: #ccc;
 $ruled-line: #bbb 1px solid;
 
 @mixin textured($with_background: $background_color) {
@@ -228,7 +229,7 @@ body >article {
   figure.precaption {
     width: $article-width + $caption-width + $leading;
     overflow: hidden;
-    border-bottom: #eee 1px solid;
+    border-bottom: $pre_border_color 1px solid;
     pre {
       margin: 0;
     }
@@ -252,8 +253,8 @@ pre {
   overflow-x: auto;
   line-height: 1.4;
   padding: 0.5em 0;
-  border-top: #eee 1px solid;
-  border-bottom: #eee 1px solid;
+  border-top: $pre_border_color 1px solid;
+  border-bottom: $pre_border_color 1px solid;
   code {
     padding: 0;
     font-weight: normal;
