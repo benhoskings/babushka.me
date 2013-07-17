@@ -102,8 +102,26 @@ title: Writing deps
   $
 
 :md
-  This is how deps work (detailed [here](/how-deps-work)): it's the work `meet` did on the system, not its return value, that matters. Once `meet` runs, the `met?` check is passing, and we're done.
+  This is how deps work (detailed [here](/how-deps-work)): it's the work `meet` did on the system, not its return value, that matters. Once `meet` runs, the `met?` check is passing, and we're done. Without the logging, the final version of our dep looks like this:
 
+:precaptionedruby
+  dep 'work symlinked' do
+    met? {
+      "~/work".p.exists?
+    }
+    meet {
+      shell "ln -s ~/jobs/acme ~/work"
+    }
+  end
+
+  $ babushka 'work symlinked'
+  work symlinked {
+    meet {
+    }
+  } ✓ work symlinked
+  $
+
+:md
   Note the clean split between met? and meet: `met?` checks, and `meet` acts. If you find you're checking for the presence of some condition in your `meet` block, it probably means you're trying to do too much in a single dep, and you should be splitting it up into smaller ones. Remember, deps are small, self-contained and context-free - the more focused, the better.
 
 
