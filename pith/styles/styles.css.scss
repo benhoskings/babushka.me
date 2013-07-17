@@ -145,8 +145,8 @@ body > aside {
 
 body >h1 {
   width: $layout-width;
-  margin: $leading * 0.5 auto;
-  padding: 0 $leading;
+  margin: 0 auto;
+  padding: $leading * 0.5 $leading;
 }
 
 body .nav-wrapper {
@@ -157,7 +157,6 @@ body .nav-wrapper {
   nav {
     width: $layout-width;
     margin: 0 auto;
-
     padding: ($leading * 0.5) $leading;
     list-style: none;
 
@@ -168,6 +167,7 @@ body .nav-wrapper {
         position: absolute;
         bottom: 0;
         right: $leading * 3;
+        border-bottom: none;
 
         -webkit-animation-name: jump;
         -webkit-animation-duration: 400ms;
@@ -184,26 +184,28 @@ body .nav-wrapper {
     }
 
     section {
-      &.doll { margin-left: 0; }
-      margin-right: $leading;
-      overflow: hidden;
       h1, h2 {
         margin: 0;
       }
       h2, p {
+        display: -moz-inline-stack;
         display: inline-block;
+        zoom: 1;
+        *display: inline;
       }
       h2 {
         text-transform: lowercase;
         &:after {
           content: ' - ';
         }
+        html.ie6 &, html.ie7 & {
+          margin-right: $leading;
+        }
       }
       p {
         margin: 0;
         a {
           text-transform: lowercase;
-          font-size: 12px;
           &:after {
             content: ',';
           }
@@ -213,7 +215,6 @@ body .nav-wrapper {
         }
       }
     }
-    overflow: hidden;
   }
 }
 
