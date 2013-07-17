@@ -145,8 +145,8 @@ body > aside {
 
 body >h1 {
   width: $layout-width;
-  margin: $leading * 0.5 auto;
-  padding: 0 $leading;
+  margin: 0 auto;
+  padding: $leading * 0.5 $leading;
 }
 
 body .nav-wrapper {
