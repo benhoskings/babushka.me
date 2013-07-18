@@ -162,14 +162,9 @@ title: Dep examples
 
     # Babushka will pull the source from here, and save it in
     # ~/.babushka/src for later (i.e. it only ever downloads once).
-    # It can handle the following:
-    # - http://, https://, ftp:// - babushka downloads the URL via
-    #   `curl`, and attempts to extract it if it's an archive of
-    #   some sort.
-    # - (no protocol) - babushka assumes `curl` can handle it, as
-    #   above.
-    # - git:// - babushka clones the URL, or if it is already cloned,
-    #   does a fetch / reset to update.
+    # If the protocol is git:// then babushka will clone/update the
+    # repo as required, and for all other protocols, it defers to
+    # `curl`. Hence, babushka can handle any URI curl can, plus git://.
     source "https://github.com/benhoskings/fish.git"
 
     # The 'provides' setting is just the same as in '.managed',
@@ -186,8 +181,8 @@ title: Dep examples
     # prefix '/usr/local'
 
     # This is run before configure. It defauls to running autoconf,
-    # if ./configure doesn't already exist and it can be generated
-    # by an .in or .ac.
+    # if ./configure doesn't already exist but its inputs (configure.in
+    # or configure.ac) do.
     # preconfigure { shell "autoconf" }
 
     # Specify env vars to set for configure, to achieve e.g.
