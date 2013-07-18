@@ -175,68 +175,84 @@ title: Writing deps
 
   Parameters are added to a dep by naming them as symbols following its name.
 
-      dep 'git', :version do
-        # ...
-      end
+:preruby
+  dep 'git', :version do
+    # ...
+  end
 
+:md
   That defines a 'version' parameter, which allows us to supply an argument like this:
 
-      dep 'a gittish task' do
-        requires 'git'.with(version: '1.8.0')
-      end
+:preruby
+  dep 'a gittish task' do
+    requires 'git'.with(version: '1.8.0')
+  end
 
+:md
   As well as passing named arguments in a hash, you can pass them positionally. When passing by name, you can supply as many or as few as you like; whem passing positionally, you have to supply them all (the arity has to match).
 
-      dep 'file linked', :src, :target do
-        # ...
-      end
+:preruby
+  dep 'file linked', :src, :target do
+    # ...
+  end
 
-      dep 'babushka linked' do
-        requires 'file linked'.with('./bin/babushka.rb', '~/bin/babushka')
-      end
+  dep 'babushka linked' do
+    requires 'file linked'.with('./bin/babushka.rb', '~/bin/babushka')
+  end
 
+:md
   Arguments can also be supplied on the commandline when invoking a parameterised dep directly; see [running deps](/running-deps).
 
   Parameters are always optional, and lazy. It's not until a parameter's value is requested that it's resolved; at that point, if it doesn't have a value at that point, then babushka will prompt for it. (If `--defaults` was used, then the run will fail on an unset parameter.)
 
   Parameters can have default values, which are suggested when prompting and selectable by hitting 'enter':
 
-      dep 'postgres', :version do
-        version.default('9.2.4')
-      end
+:preruby
+  dep 'postgres', :version do
+    version.default('9.2.4')
+  end
 
+:md
   They also support silent defaults ("bang defaults"), that are used without prompting whenever a value wasn't supplied:
 
-      dep 'nginx.src', :prefix do
-        prefix.default!('/opt/nginx')
-      end
+:preruby
+  dep 'nginx.src', :prefix do
+    prefix.default!('/opt/nginx')
+  end
 
+:md
   The prompt message can be customised (all these settings can be chained):
 
-      dep 'nginx.src', :prefix do
-        prefix.ask("Where should nginx be installed?").default('/opt/nginx')
-      end
+:preruby
+  dep 'nginx.src', :prefix do
+    prefix.ask("Where should nginx be installed?").default('/opt/nginx')
+  end
 
+:md
   And choices accepted when prompting can be restricted:
 
-      dep 'vhost configured', :type do
-        # Without descriptions
-        type.choose(:static, :proxy, :unicorn)
+:preruby
+  dep 'vhost configured', :type do
+    # Without descriptions
+    type.choose(:static, :proxy, :unicorn)
 
-        # Including descriptions
-        type.choose(
-          :static => "A statically served vhost",
-          :proxy => "A vhost proxied to a custom host/port",
-          :unicorn => "A vhost proxying to a unicorn via unix socket"
-        )
-      end
+    # Including descriptions
+    type.choose(
+      :static => "A statically served vhost",
+      :proxy => "A vhost proxied to a custom host/port",
+      :unicorn => "A vhost proxying to a unicorn via unix socket"
+    )
+  end
 
+:md
   This explains why dep parameters aren't just block parameters, like this:
 
-      dep 'git', do |version| # This wouldn't work.
-        # ...
-      end
+:preruby
+  dep 'git', do |version| # This wouldn't work.
+    # ...
+  end
 
+:md
   Local variables aren't available in helper methods, which don't close over the scope they're defined in. But more importantly, for chained defaults and lazy prompting to work, referencing parameters has to be a method call.
 
 
@@ -246,26 +262,32 @@ title: Writing deps
 
   In most situations, parameters will convert and compare as strings correctly. For example given a parameter 'param', these cases will all work as expected:
 
-      param == 'value'
-      param[/value/]
-      File.exists?(param)
-      Regexp.escape(param)
+:preruby
+  param == 'value'
+  param[/value/]
+  File.exists?(param)
+  Regexp.escape(param)
 
+:md
   In cases where there is no default conversion, or it's not the one we expect, though, the param will fail:
 
-      # This will fail: the default conversion here is `#to_i`,
-      # which isn't defined on Parameter.
-      'value'[arg]
+:preruby
+  # This will fail: the default conversion here is `#to_i`,
+  # which isn't defined on Parameter.
+  'value'[arg]
 
-      # This will fail too: the key is the param's value, not
-      # the param itself, so nil is returned.
-      {'key' => 'val'}[arg]
+  # This will fail too: the key is the param's value, not
+  # the param itself, so nil is returned.
+  {'key' => 'val'}[arg]
 
+:md
   In those cases, we just need to convert the parameter explicitly:
 
-      'value'[arg.to_s]
-      {'key' => 'val'}[arg.to_s]
+:preruby
+  'value'[arg.to_s]
+  {'key' => 'val'}[arg.to_s]
 
+:md
   Some proxy objects solve this by becoming transparent to the caller via `#method_missing`. That would solve these cases, but I think it makes debugging too susprising: it effectively creates an invisible object. I think the occasional bit of explicitness to maintain predictability is the right tradeoff.
 
 
