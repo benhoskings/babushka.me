@@ -90,9 +90,11 @@ welcome() {
   echo ""
   echo "Hi there :)"
   echo ""
-  echo "Let's get down to business - first, pulling a tarball of babushka from"
-  echo "https://github.com. Then, using it to run \"babushka babushka\", which"
-  echo "installs or updates babushka and its dependencies as required."
+  echo "Let's get down to business - first, pulling a tarball of babushka:"
+  echo "  ${from}"
+  echo ""
+  echo "Then, using it to run \"babushka babushka\", which installs or"
+  echo "updates babushka and git as required."
   echo ""
 
   if has 'curl'; then
