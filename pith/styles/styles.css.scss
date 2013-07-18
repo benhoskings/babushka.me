@@ -102,7 +102,7 @@ ul ul {
   margin: 0;
 }
 
-h1, h2 {
+h1, h2, h3 {
   font-size: 13px;
   text-transform: uppercase;
 }
@@ -116,6 +116,15 @@ h2 {
   letter-spacing: 1px;
   body >article & {
     border-bottom: $ruled-line;
+    margin-bottom: -1px;
+  }
+}
+
+h3 {
+  font-weight: normal;
+  body >article & {
+    border-bottom: $ruled-line;
+    border-bottom-style: dotted;
     margin-bottom: -1px;
   }
 }
