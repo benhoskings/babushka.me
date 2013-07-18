@@ -298,13 +298,31 @@ title: Writing deps
   end
 
 :md
-  Notice how the contents of the `template` block looks like a normal dep. That's cause it is---the meta dep is a factory, that accepts a value defined by `accepts_value_for` (in this case, `source`) and produces regular deps at runtime under the covers.
+  Notice how the contents of the `template` block looks like a normal dep. That's because it is -- the meta dep is a factory that produces deps with their met? and meet blocks already set (they can be overridden in the dep, though).
 
-  Given the `tmbundle` meta dep, this dep handles the cucumber bundle:
+  Also notice the item outside the template: `accepts_value_for`. This call is actually part of a second DSL on top of which babushka's real DSL is built. That call means that deps defined against this template have a new DSL method, 'source', that can set and return a value:
 
 :preruby
-  dep 'Cucumber.tmbundle' do
-    source 'https://github.com/bmabey/cucumber-tmbundle.git'
+  meta :tmbundle do
+    accepts_value_for :source
+    # ...
+  end
+
+  dep 'Rspec.tmbundle'
+    source 'https://github.com/dchelimsky/rspec-tmbundle.git'
+    meet {
+      log "This dep would install from \#{source}."
+    }
+  end
+
+:md
+  In fact, this is how the entire babushka DSL is built: `met?`, `meet`, and so on are defined in just the same way. The only difference is _where_ they're defined: they're found on [the base template](https://github.com/benhoskings/babushka/blob/master/lib/babushka/dep_context.rb), so they're available in all deps.
+
+  Let's look again at the rspec dep we defined above, against the 'tmbundle' template.
+
+:preruby
+  dep 'Rspec.tmbundle'
+    source 'https://github.com/dchelimsky/rspec-tmbundle.git'
   end
 
 :md
