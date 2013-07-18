@@ -50,14 +50,22 @@ The bootstrap script prompts for confirmation and an install prefix. If you're s
 
 ## Versions
 
-You can pass a git ref to `babushka.me/up` to install a different babushka version. The default is `stable`.
+By default, `babushka.me/up` will install the latest stable version, but this can be customised. Just pass a git ref to the script like so (the default is `stable`):
 
     sh -c "`curl https://babushka.me/up/<ref>`"
 
-You can supply any ref that github serves as a tarball. Some common ones:
+You can supply any ref that github serves as a tarball: any branch, tag, or SHA will work. Some examples:
 
-- `stable` is the latest stable version. I update stable when I bump the version number, and it always fast-forwards (usually to `master`'s HEAD at the time).
-- `master` is the development tip. I work on master locally, merging topic branches into it, and push to origin when the specs are green. Its tip is always a descendant of the current `stable` tip.
+- `stable` is the latest stable version. I update stable when I tag a new version, and it always fast-forwards (usually to `master`'s HEAD at the time).
+- `master` is the development tip. I work on master locally, merging topic branches into it, and push to github when the specs are green. Its HEAD is always a descendant of the current `stable` HEAD.
+
+If you like, you can lock your install by supplying a SHA, which can never change:
+
+    sh -c "`curl https://babushka.me/up/4ff73e0eda5ff439fd786e4a3bea8568abc95fe2`"
+
+You could also use a tag, for readability (I promise I'll never change a version tag):
+
+    sh -c "`curl https://babushka.me/up/v0.16.10`"
 
 
 ## Manual installation
