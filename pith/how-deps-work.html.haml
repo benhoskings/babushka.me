@@ -45,7 +45,7 @@ title: How deps work
   Take [the rubygems dep](https://github.com/benhoskings/babushka/blob/master/deps/rubygems.rb) as an example:
 
   - The `met?` check confirms `gem` is in the path and its version is recent enough.
-  - The `meet` block unconditionally installs the latest babushka.
+  - The `meet` block unconditionally downloads and installs rubygems.
 
   Things like rubygems aren't hard to install on their own, but with babushka it's fast and predictable: the job is done just right, every time.
 
