@@ -169,7 +169,105 @@ title: Writing deps
 
   ## Dep parameters
 
-  TODO
+  As discussed in the section on [running deps](/running-deps), it's nice to think of deps as similar to a method: they wrap up a bit of logic, separating it from the context it's subsequently used in. In order to truly use and re-use a method, though, it needs to be parameterised: there's not much point to wrapping logic in a method if we have to repeat it each time the inputs change. So just as a method has parameters, so do deps.
+
+  Deps haven't always had parameters: originally, babushka had a rather unsavoury system of globally shared variables, that at one point even involved `method_missing` (we were all young once). Parameters were introduced in Sep 2011, and all that global nonsense is gone now; [the relevant version bump](https://github.com/benhoskings/babushka/commit/40054c2e7b9c382ff01ea26b70725a3271ac3eda) has more details on the redesign.
+
+  Parameters are added to a dep by naming them as symbols following its name.
+
+      dep 'git', :version do
+        # ...
+      end
+
+  That defines a 'version' parameter, which allows us to supply an argument like this:
+
+      dep 'a gittish task' do
+        requires 'git'.with(version: '1.8.0')
+      end
+
+  As well as passing named arguments in a hash, you can pass them positionally. When passing by name, you can supply as many or as few as you like; whem passing positionally, you have to supply them all (the arity has to match).
+
+      dep 'file linked', :src, :target do
+        # ...
+      end
+
+      dep 'babushka linked' do
+        requires 'file linked'.with('./bin/babushka.rb', '~/bin/babushka')
+      end
+
+  Arguments can also be supplied on the commandline when invoking a parameterised dep directly; see [running deps](/running-deps).
+
+  Parameters are always optional, and lazy. It's not until a parameter's value is requested that it's resolved; at that point, if it doesn't have a value at that point, then babushka will prompt for it. (If `--defaults` was used, then the run will fail on an unset parameter.)
+
+  Parameters can have default values, which are suggested when prompting and selectable by hitting 'enter':
+
+      dep 'postgres', :version do
+        version.default('9.2.4')
+      end
+
+  They also support silent defaults ("bang defaults"), that are used without prompting whenever a value wasn't supplied:
+
+      dep 'nginx.src', :prefix do
+        prefix.default!('/opt/nginx')
+      end
+
+  The prompt message can be customised (all these settings can be chained):
+
+      dep 'nginx.src', :prefix do
+        prefix.ask("Where should nginx be installed?").default('/opt/nginx')
+      end
+
+  And choices accepted when prompting can be restricted:
+
+      dep 'vhost configured', :type do
+        # Without descriptions
+        type.choose(:static, :proxy, :unicorn)
+
+        # Including descriptions
+        type.choose(
+          :static => "A statically served vhost",
+          :proxy => "A vhost proxied to a custom host/port",
+          :unicorn => "A vhost proxying to a unicorn via unix socket"
+        )
+      end
+
+  This explains why dep parameters aren't just block parameters, like this:
+
+      dep 'git', do |version| # This wouldn't work.
+        # ...
+      end
+
+  Local variables aren't available in helper methods, which don't close over the scope they're defined in. But more importantly, for chained defaults and lazy prompting to work, referencing parameters has to be a method call.
+
+
+  ### Parameter limitations
+
+  Dep parameters do have some limitations, mainly stemming from the fact that they're Parameter objects wrapping their values, not the values themselves.
+
+  In most situations, parameters will convert and compare as strings correctly. For example given a parameter 'param', these cases will all work as expected:
+
+      param == 'value'
+      param[/value/]
+      File.exists?(param)
+      Regexp.escape(param)
+
+  In cases where there is no default conversion, or it's not the one we expect, though, the param will fail:
+
+      # This will fail: the default conversion here is `#to_i`,
+      # which isn't defined on Parameter.
+      'value'[arg]
+
+      # This will fail too: the key is the param's value, not
+      # the param itself, so nil is returned.
+      {'key' => 'val'}[arg]
+
+  In those cases, we just need to convert the parameter explicitly:
+
+      'value'[arg.to_s]
+      {'key' => 'val'}[arg.to_s]
+
+  Some proxy objects solve this by becoming transparent to the caller via `#method_missing`. That would solve these cases, but I think it makes debugging too susprising: it effectively creates an invisible object. I think the occasional bit of explicitness to maintain predictability is the right tradeoff.
+
 
   ## Templated Deps
 
