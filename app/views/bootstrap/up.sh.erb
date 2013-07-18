@@ -170,7 +170,9 @@ stream_tarball() {
 handle_install() {
   echo "Invoking babushka $(cd "$to" && bin/babushka.rb --version) to handle the install."
   echo ""
-  ruby "$to/bin/babushka.rb" meet babushka version="$ref" $([ "$interactive" = 'true' ] || echo '--defaults')
+  ruby "$to/bin/babushka.rb" meet babushka \
+    version="$ref" \
+    $([ "$interactive" = 'true' ] || echo '--defaults')
   [ $? -eq 0 ]
 }
 
