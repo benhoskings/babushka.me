@@ -288,7 +288,7 @@ title: Writing deps
   {'key' => 'val'}[arg.to_s]
 
 :md
-  Some proxy objects solve this by becoming transparent to the caller via `#method_missing`. That would solve these cases, but I think it makes debugging too susprising: it effectively creates an invisible object. I think the occasional bit of explicitness to maintain predictability is the right tradeoff.
+  Some proxy objects solve this by becoming transparent to the caller via `#method_missing`. Doing so could solve these cases, but I think it makes debugging too susprising: it effectively creates an invisible object. I think the occasional bit of explicitness to maintain predictability is the right tradeoff.
 
 
   ## Templated Deps
