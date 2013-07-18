@@ -128,7 +128,44 @@ title: Writing deps
 
   ## Requirements
 
-  TODO
+  The next step in defining a larger task is to take the deps, each one a little nugget of functionality, and relate them to each other. Along with `met?` and `meet`, there's a third keyword that's core to the babushka DSL, and that's `requires`. Unlike met? and meet, which accept a block, `requires` accepts a list, each item of which names another dep that this one directly depends on.
+
+  This allows us to assemble deps into a tree of dependencies, while still ignoring most of the context (see above): from the point of view of any one dep, all we have to worry about are its direct requirements. The shape of the dependency tree is implied by those requirements, and is lazily assembled by babushka as it runs the deps.
+
+  There's no restrictions on what you can require from where: any dep can require any number of other deps. It's also fine for a given dep to be required from many others -- a given dep will only be invoked once per run. Each subsequent time a requirement pulls it in, the cached result of the first run is used.
+
+  In fact, many core deps do this extensively. For example, deps defined against a package manager template all require a dep for the package manager itself (e.g. 'bundler.gem', and so on, all require 'rubygems'). If we have a dep pulling in some libraries our project requires, then on OS X, only the first one will cause the 'homebrew' dep to be invoked; subsequent deps use the cached value:
+
+      $ babushka 'project libs'
+      project libs {
+        curl.lib {
+          homebrew {
+            binary.homebrew {
+              repo.homebrew {
+              } ✓ repo.homebrew
+              'brew' runs from /usr/local/bin.
+            } ✓ binary.homebrew
+            build tools {
+              xcode tools {
+                'cc', 'gcc', 'c++', 'g++', 'llvm-gcc', 'llvm-g++', 'clang', 'make', 'ld' & 'libtool' run from /usr/bin.
+              } ✓ xcode tools
+            } ✓ build tools
+          } ✓ homebrew
+        } ✓ curl.lib
+        png.lib {
+          ✓ homebrew (cached)
+          ✓ system has libpng-1.5.13 brew
+        } ✓ png.lib
+        yaml.lib {
+          ✓ homebrew (cached)
+          ✓ system has libyaml-0.1.4 brew
+        } ✓ yaml.lib
+      } ✓ project libs
+
+  The only invalid case is a dependency loop, e.g. a -> b -> c -> a. Babushka detects these, by maintaining a dep callstack and checking that each dep it's about to run isn't already in it. If a loop is detected, babushka will fail with a descriptive message.
+
+  In sum, there's no need to worry about the resulting graph, or run order, or anything like that: just specify each dep's immediate requirements, and it'll all come out in the wash.
+
 
   ## Dep parameters
 
