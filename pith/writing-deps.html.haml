@@ -162,7 +162,7 @@ title: Writing deps
         } ✓ yaml.lib
       } ✓ project libs
 
-  The only invalid case is a dependency loop, e.g. a -> b -> c -> a. Babushka detects these, by maintaining a dep callstack and checking that each dep it's about to run isn't already in it. If a loop is detected, babushka will fail with a descriptive message.
+  The only invalid case is a dependency loop, e.g. a -> b -> c -> a. Babushka detects these, by maintaining a dep callstack and checking that each dep it's about to run isn't already in the stack. If a loop is detected, babushka will fail with a descriptive message.
 
   In sum, there's no need to worry about the resulting graph, or run order, or anything like that: just specify each dep's immediate requirements, and it'll all come out in the wash.
 
