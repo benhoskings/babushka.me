@@ -68,6 +68,16 @@ You could also use a tag, for readability (I promise I'll never change a version
     sh -c "`curl https://babushka.me/up/v0.16.10`"
 
 
+## Installing a custom babushka
+
+By default, babushka is installed from my repo on github, [benhoskings/babushka](https://github.com/benhoskings/babushka). If you like, you can install from your own repo instead by passing a custom repo URI in the `$BABUSHKA_REPO` envorinment variable, like so:
+
+    BABUSHKA_REPO=https://github.com/dgoodlad/babushka.git \
+      sh -c "`curl https://babushka.me/up`"
+
+This is useful for running installs in situations where github isn't accessible, or if you'd like to install from a fork of babushka.
+
+
 ## Manual installation
 
 If you'd prefer to install manually, it's pretty straightforward. First, ensure ruby and git are installed to your taste:
