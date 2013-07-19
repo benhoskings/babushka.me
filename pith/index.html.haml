@@ -1,0 +1,45 @@
+---
+layout: "/_layout.html.haml"
+title: Babushka
+---
+
+%p
+  %strong
+    Babushka is a humble tool for automating computing chores.
+
+%p
+  For each job, a test, and the code to make that test pass. On the left is a babushka dep, and on the right, what happens when it's run.
+
+:precaptionedruby
+  dep 'nginx running' do
+    requires 'nginx configured'
+    def netstat_cmd
+      "netstat -an | grep '^tcp.*[.:]80 .*LISTEN'"
+    end
+    met? {
+      shell?(netstat_cmd).tap {|r|
+        log "\#{r ? 'Some' : 'No'}thing listening."
+      }
+    }
+    meet {
+      log_shell 'Starting', 'initctl start nginx'
+    }
+  end
+
+  $ babushka 'nginx running'
+  nginx running {
+    nginx configured {
+      ✓ The config is valid.
+    } ✓ nginx configured
+    Nothing listening.
+    meet {
+      Starting... done.
+    }
+    Something listening.
+  } ✓ nginx running
+
+%p
+  Insta-install:
+  %code
+    %strong<
+      sh -c "`curl https://babushka.me/up`"
