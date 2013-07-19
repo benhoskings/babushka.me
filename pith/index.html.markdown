@@ -1,4 +1,4 @@
---- 
+---
 layout: "/_layout.html.haml"
 title: Babushka
 ---
