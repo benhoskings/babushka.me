@@ -1,5 +1,5 @@
 dep 'before deploy', :old_id, :new_id, :branch, :env do
-  requires 'db backed up'
+  # requires 'db backed up'
 end
 
 dep 'on deploy', :old_id, :new_id, :branch, :env do
