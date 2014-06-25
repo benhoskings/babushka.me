@@ -70,7 +70,7 @@ You could also use a tag, for readability (I promise I'll never change a version
 
 ## Installing a custom babushka
 
-By default, babushka is installed from my repo on github, [benhoskings/babushka](https://github.com/benhoskings/babushka). If you like, you can install from your own repo instead by passing a custom repo URI in the `$BABUSHKA_REPO` envorinment variable, like so:
+By default, babushka is installed from my repo on github, [benhoskings/babushka](https://github.com/benhoskings/babushka). If you like, you can install from your own repo instead by passing a custom repo URI in the `$BABUSHKA_REPO` environment variable, like so:
 
     BABUSHKA_REPO=https://github.com/dgoodlad/babushka.git \
       sh -c "`curl https://babushka.me/up/master`"
