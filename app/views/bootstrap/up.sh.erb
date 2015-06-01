@@ -5,7 +5,11 @@
 #
 # sh -c "`curl https://babushka.me/up`"
 
-# The ref is rendered per-request by the babushka webservice.
+# The ref is rendered per-request by the babushka webservice. It defaults
+# to 'stable', but you can supply any git ref (branch, tag, commit):
+#
+# sh -c "`curl https://babushka.me/up/refspec`"
+#
 ref=<%= ref %>
 
 # Can't use $HOME, because sometimes it's not set.
