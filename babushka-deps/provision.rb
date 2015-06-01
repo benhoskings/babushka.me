@@ -6,5 +6,7 @@ dep 'provision the bastard', :env, :host, :host_name do
     app_user: 'babushka',
     domain: 'babushka.me',
     app_name: 'babushka',
+    expected_content_path: '/up',
+    expected_content: 'Hi there :)',
   )
 end
