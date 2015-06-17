@@ -49,7 +49,7 @@ GEM
     globalid (0.3.5)
       activesupport (>= 4.1.0)
     haml (3.1.7)
-    hirb (0.7.0)
+    hirb (0.7.3)
     i18n (0.7.0)
     json (1.8.3)
     kgio (2.9.3)
