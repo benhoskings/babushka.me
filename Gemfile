@@ -7,7 +7,7 @@ gem 'unicorn'
 gem 'bugsnag'
 gem 'hirb'
 
-gem 'pith', git: "git://github.com/mdub/pith.git", ref: "98d46b8"
+gem 'pith'
 gem 'haml'
 gem 'sass'
 gem 'kramdown'
