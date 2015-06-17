@@ -4,7 +4,7 @@ end
 
 dep 'on deploy', :old_id, :new_id, :branch, :env do
   requires 'built'
-  requires 'db migrated'.with(old_id, new_id)
+  requires 'common:when path changed'.with('db/migrate/', 'conversation:migrated db', old_id, new_id, env)
 end
 
 dep 'built', template: 'task' do
@@ -25,29 +25,4 @@ dep 'db backed up' do
   before { backup_prefix.mkdir }
   meet { log_shell "Creating #{sqldump} from babushka.me", "pg_dump babushka.me > '#{sqldump}' && gzip -9 '#{sqldump}'" }
   after { log_shell "Removing old sqldumps", %Q{ls -t -1 #{backup_prefix} | tail -n+6 | while read f; do rm "#{backup_prefix}/$f"; done} }
-end
-
-dep 'db migrated', :old_id, :new_id do
-  requires_when_unmet 'benhoskings:maintenance page up'
-  met? {
-    if @run
-      true # done
-    else
-      # If the branch was changed, git supplies 0000000 for old_id, so
-      # it looks the commit range is 'everything'.
-      pending = shell("git diff --numstat #{old_id[/^0+$/] ? '' : old_id}..#{new_id}").split("\n").grep(/^[\d\s]+db\/migrate\//)
-      if pending.empty?
-        log "No new migrations."
-        true
-      else
-        log "#{pending.length} migration#{'s' unless pending.length == 1} to run:"
-        pending.each {|p| log p }
-        false
-      end
-    end
-  }
-  meet {
-    shell 'bundle exec rake db:migrate --trace RAILS_ENV=production', log: true
-    @run = true
-  }
 end
