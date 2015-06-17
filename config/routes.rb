@@ -1,5 +1,5 @@
 BabushkaMe::Application.routes.draw do
-  match '/deps/search.:format/:q', :to => 'deps#search', :via => :get, constraints: {q: /[^\/]+/}
+  # match '/deps/search.:format/:q', :to => 'deps#search', :via => :get, constraints: {q: /[^\/]+/}
 
   match "/up", :to => "bootstrap#up", :via => :get, :format => :sh
   match "/up/:ref", :to => "bootstrap#up", :via => :get, :format => :sh, :ref =>  /[^\/]*/
