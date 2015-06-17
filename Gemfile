@@ -6,7 +6,6 @@ gem 'unicorn'
 
 gem 'bugsnag'
 gem 'hirb'
-gem 'pg'
 
 gem 'pith', git: "git://github.com/mdub/pith.git", ref: "98d46b8"
 gem 'haml'
