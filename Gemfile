@@ -5,7 +5,6 @@ gem 'rack'
 gem 'unicorn'
 
 gem 'bugsnag'
-gem 'delayed_job'
 gem 'hirb'
 gem 'pg'
 
