@@ -19,9 +19,9 @@ before_fork do |server, worker|
   rescue Errno::ESRCH
     STDERR.puts "[worker #{worker.nr}] #{old_pid} was already gone."
   end
-  ActiveRecord::Base.connection.disconnect!
+  # ActiveRecord::Base.connection.disconnect!
 end
 
 after_fork do |server, worker|
-  ActiveRecord::Base.establish_connection
+  # ActiveRecord::Base.establish_connection
 end

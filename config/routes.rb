@@ -1,9 +1,4 @@
 BabushkaMe::Application.routes.draw do
-  match '/deps/search.:format/:q', :to => 'deps#search', :via => :get, constraints: {q: /[^\/]+/}
-  match '/runs.:format', :to => 'runs#create', :via => :post
-
-  match '/a_new_tarball', :to => 'babushka#tarball', :via => :post
-
   match "/up", :to => "bootstrap#up", :via => :get, :format => :sh
   match "/up/:ref", :to => "bootstrap#up", :via => :get, :format => :sh, :ref =>  /[^\/]*/
 

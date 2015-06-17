@@ -47,8 +47,6 @@ GEM
     clamp (0.5.0)
     coderay (1.0.8)
     daemons (1.1.9)
-    delayed_job (2.1.4)
-      activesupport (~> 3.0)
     erubis (2.7.0)
     eventmachine (1.0.7)
     haml (3.1.7)
@@ -68,7 +66,6 @@ GEM
     mime-types (1.25.1)
     multi_json (1.10.1)
     multi_xml (0.5.1)
-    pg (0.18.2)
     polyglot (0.3.5)
     rack (1.4.5)
     rack-cache (1.2)
@@ -123,11 +120,9 @@ PLATFORMS
 DEPENDENCIES
   bugsnag
   coderay
-  delayed_job
   haml
   hirb
   kramdown
-  pg
   pith!
   rack
   rails (= 3.2.19)

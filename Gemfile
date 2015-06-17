@@ -5,9 +5,7 @@ gem 'rack'
 gem 'unicorn'
 
 gem 'bugsnag'
-gem 'delayed_job'
 gem 'hirb'
-gem 'pg'
 
 gem 'pith', git: "git://github.com/mdub/pith.git", ref: "98d46b8"
 gem 'haml'
