@@ -41,7 +41,7 @@ GEM
       multi_json (~> 1.0)
     builder (3.2.2)
     clamp (1.0.0)
-    coderay (1.0.8)
+    coderay (1.1.0)
     daemons (1.2.2)
     erubis (2.7.0)
     eventmachine (1.0.7)
