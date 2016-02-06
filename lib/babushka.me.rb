@@ -19,4 +19,10 @@ class BabushkaMe < Sinatra::Base
   get '/up/:ref' do
     erb :"up.sh", locals: {ref: params[:ref]}
   end
+
+  get("/docs") { redirect("http://babushka.me") }
+  get("/rdoc") { redirect("http://www.rubydoc.info/github/benhoskings/babushka") }
+  get("/mailing_list") { redirect("http://groups.google.com/group/babushka_app") }
+  get(%r{/([0-9a-f]{7,40})}i) { redirect("http://github.com/benhoskings/babushka/commit/#{params[:captures].first}") }
+
 end

@@ -28,4 +28,26 @@ class BabushkaMeTest < Minitest::Test
     assert_match /^ref=master$/, last_response.body
   end
 
+  def test_redirect_to_docs
+    get("/docs")
+    assert last_response.redirect?
+    assert_equal "http://babushka.me", last_response["Location"]
+  end
+  def test_redirect_to_rdoc
+    get("/rdoc")
+    assert last_response.redirect?
+    assert_equal "http://www.rubydoc.info/github/benhoskings/babushka", last_response["Location"]
+  end
+  def test_redirect_to_mailing_list
+    get("/mailing_list")
+    assert last_response.redirect?
+    assert_equal "http://groups.google.com/group/babushka_app", last_response["Location"]
+  end
+
+  def test_redirect_to_ref
+    get("/f007e2c")
+    assert last_response.redirect?
+    assert_equal "http://github.com/benhoskings/babushka/commit/f007e2c", last_response["Location"]
+  end
+
 end
