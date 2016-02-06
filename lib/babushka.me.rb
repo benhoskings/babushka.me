@@ -27,4 +27,8 @@ class BabushkaMe < Sinatra::Base
   get("/mailing_list") { redirect("http://groups.google.com/group/babushka_app") }
   get(%r{/([0-9a-f]{7,40})}i) { redirect("http://github.com/benhoskings/babushka/commit/#{params[:captures].first}") }
 
+  get('/diagnostics/exception') do
+    raise
+  end
+
 end
