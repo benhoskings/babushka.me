@@ -13,8 +13,13 @@ class BabushkaMeTest < Minitest::Test
   end
 
   def test_response_includes_refspec_header
-    get '/'
+    get '/up'
     assert_match /[0-9a-f]{7,}/, last_response["X-Refspec"]
+  end
+
+  def test_ref_defaults_to_stable
+    get '/up'
+    assert_match /^ref=stable$/, last_response.body
   end
 
 end

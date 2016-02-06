@@ -12,7 +12,7 @@ class BabushkaMe < Sinatra::Base
     headers "X-Refspec" => REFSPEC
   end
 
-  get '/' do
-    "Hello world!"
+  get '/up' do
+    erb :"up.sh", locals: {ref: 'stable'}
   end
 end
