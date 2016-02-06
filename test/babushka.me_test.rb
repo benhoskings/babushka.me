@@ -22,4 +22,10 @@ class BabushkaMeTest < Minitest::Test
     assert_match /^ref=stable$/, last_response.body
   end
 
+  def test_ref_can_be_customised
+    get '/up/master'
+    refute_match /^ref=stable$/, last_response.body
+    assert_match /^ref=master$/, last_response.body
+  end
+
 end

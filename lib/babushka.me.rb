@@ -15,4 +15,8 @@ class BabushkaMe < Sinatra::Base
   get '/up' do
     erb :"up.sh", locals: {ref: 'stable'}
   end
+
+  get '/up/:ref' do
+    erb :"up.sh", locals: {ref: params[:ref]}
+  end
 end
