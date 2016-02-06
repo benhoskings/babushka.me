@@ -51,7 +51,6 @@ GEM
       activesupport (>= 4.1.0)
     haml (4.0.6)
       tilt
-    hirb (0.7.3)
     i18n (0.7.0)
     json (1.8.3)
     kgio (2.9.3)
@@ -142,7 +141,6 @@ DEPENDENCIES
   bugsnag
   coderay
   haml
-  hirb
   kramdown
   pith
   rack

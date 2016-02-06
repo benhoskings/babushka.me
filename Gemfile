@@ -5,7 +5,6 @@ gem 'rack'
 gem 'unicorn'
 
 gem 'bugsnag'
-gem 'hirb'
 
 gem 'pith'
 gem 'haml'
