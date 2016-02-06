@@ -17,6 +17,13 @@ class BabushkaMeTest < Minitest::Test
     assert_match /[0-9a-f]{7,}/, last_response["X-Refspec"]
   end
 
+  def test_served_as_utf8_plain_text
+    get '/up'
+    assert_equal "text/plain;charset=utf-8", last_response["Content-Type"]
+    get '/up/custom'
+    assert_equal "text/plain;charset=utf-8", last_response["Content-Type"]
+  end
+
   def test_ref_defaults_to_stable
     get '/up'
     assert_match /^ref=stable$/, last_response.body

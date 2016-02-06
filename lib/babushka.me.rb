@@ -13,10 +13,12 @@ class BabushkaMe < Sinatra::Base
   end
 
   get '/up' do
+    content_type 'text/plain'
     erb :"up.sh", locals: {ref: 'stable'}
   end
 
   get '/up/:ref' do
+    content_type 'text/plain'
     erb :"up.sh", locals: {ref: params[:ref]}
   end
 
