@@ -1,7 +1,15 @@
 require "sinatra/base"
 require "sinatra/reloader"
+require 'bugsnag'
+
+Bugsnag.configure do |config|
+  config.api_key = ENV.fetch('BABUSHKA_BUGSNAG_KEY')
+end
 
 class BabushkaMe < Sinatra::Base
+  use Bugsnag::Rack
+  enable :raise_errors
+
   configure :development do
     register Sinatra::Reloader
   end
