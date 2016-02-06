@@ -6,6 +6,7 @@ gem 'unicorn'
 
 gem 'bugsnag'
 gem 'minitest'
+gem 'rake'
 
 gem 'pith'
 gem 'haml'
