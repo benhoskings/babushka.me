@@ -1,10 +1,11 @@
 source 'https://rubygems.org'
 
-gem 'rails', '4.2.5.1'
-gem 'rack'
+gem 'sinatra'
+gem 'sinatra-contrib'
 gem 'unicorn'
 
 gem 'bugsnag'
+gem 'minitest'
 
 gem 'pith'
 gem 'haml'
