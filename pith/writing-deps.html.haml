@@ -189,7 +189,7 @@ title: Writing deps
   end
 
 :md
-  As well as passing named arguments in a hash, you can pass them positionally. When passing by name, you can supply as many or as few as you like; whem passing positionally, you have to supply them all (the arity has to match).
+  As well as passing named arguments in a hash, you can pass them positionally. When passing by name, you can supply as many or as few as you like; when passing positionally, you have to supply them all (the arity has to match).
 
 :preruby
   dep 'file linked', :src, :target do
@@ -203,7 +203,7 @@ title: Writing deps
 :md
   Arguments can also be supplied on the commandline when invoking a parameterised dep directly; see [running deps](/running-deps).
 
-  Parameters are always optional, and lazy. It's not until a parameter's value is requested that it's resolved; at that point, if it doesn't have a value at that point, then babushka will prompt for it. (If `--defaults` was used, then the run will fail on an unset parameter.)
+  Parameters are always optional, and lazy. It's not until a parameter's value is requested that it's resolved; if it doesn't have a value at that point, then babushka will prompt for it. (If `--defaults` was used, then the run will fail on an unset parameter.)
 
   Parameters can have default values, which are suggested when prompting and selectable by hitting 'enter':
 
