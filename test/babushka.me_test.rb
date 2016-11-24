@@ -1,4 +1,5 @@
 ENV['RACK_ENV'] = 'test'
+ENV['BABUSHKA_BUGSNAG_KEY'] = 'test'
 
 require "minitest/autorun"
 require 'rack/test'
