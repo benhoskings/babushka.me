@@ -4,6 +4,7 @@ require 'bugsnag'
 
 Bugsnag.configure do |config|
   config.api_key = ENV.fetch('BABUSHKA_BUGSNAG_KEY')
+  config.project_root = File.dirname(__dir__)
 end
 
 class BabushkaMe < Sinatra::Base
