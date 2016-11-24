@@ -30,6 +30,11 @@ class BabushkaMeTest < Minitest::Test
     assert_match /^ref=stable$/, last_response.body
   end
 
+  def test_ref_defaults_to_stable_with_trailing_slash
+    get '/up/'
+    assert_match /^ref=stable$/, last_response.body
+  end
+
   def test_ref_can_be_customised
     get '/up/master'
     refute_match /^ref=stable$/, last_response.body

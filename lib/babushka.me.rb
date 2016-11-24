@@ -21,7 +21,7 @@ class BabushkaMe < Sinatra::Base
     headers "X-Refspec" => REFSPEC
   end
 
-  get '/up' do
+  get '/up/?' do
     content_type 'text/plain'
     erb :"up.sh", locals: {ref: 'stable'}
   end
