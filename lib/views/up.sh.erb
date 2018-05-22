@@ -31,6 +31,20 @@ else
   ref="stable"
 fi
 
+# The install repo can be customised by setting the REPO env var:
+#
+#
+if [ -n "$REPO" ]; then
+  repo=$REPO
+elif [ -n "$BABUSHKA_REPO" ]; then
+  printf "${yellow}\n"
+  echo "Supplying the repo via \$BABUSHKA_REPO is deprecated. Use \$REPO instead:"
+  echo "  REPO=$BABUSHKA_REPO sh -c "\`curl https://babushka.me/up\`""
+  printf "${reset}"
+  repo=$BABUSHKA_REPO
+fi
+
+
 # Can't use $HOME, because sometimes it's not set.
 # Can't use ~, because it depends on $HOME to expand.
 # Can't use ~$(whoami) directly, because it doesn't expand inline.
@@ -121,10 +135,10 @@ welcome() {
   echo "Let's get down to business - first, pulling a tarball of babushka from"
   echo "https://github.com. Then, using it to run \"babushka babushka\", which"
   echo "installs or updates babushka and git as required."
-  if [ -n "$BABUSHKA_REPO" ]; then
+  if [ -n "$repo" ]; then
     echo ""
     echo "I'll install from this repo:"
-    echo "  $BABUSHKA_REPO"
+    echo "  $repo"
   fi
   echo ""
 
@@ -205,7 +219,7 @@ handle_install() {
   echo ""
   ruby "$to/bin/babushka.rb" meet babushka \
     version="$ref" \
-    $([ -n "$BABUSHKA_REPO" ] && echo "from=$BABUSHKA_REPO") \
+    $([ -n "$repo" ] && echo "from=$repo") \
     $([ "$interactive" = 'true' ] || echo '--defaults')
   [ $? -eq 0 ]
 }
