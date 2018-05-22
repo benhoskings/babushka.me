@@ -1,5 +1,8 @@
 #!/bin/sh
 
+yellow="\e[33m"
+reset="\e[0m"
+
 # This is the babushka bootstrap script. To install babushka, you can
 # execute it in a terminal:
 #
@@ -19,6 +22,10 @@ deprecated_ref=<%= ref %>
 if [ -n "$VERSION" ]; then
   ref=$VERSION
 elif [ -n "$deprecated_ref" ]; then
+  printf "${yellow}\n"
+  echo "Supplying the version via /up/<version> is deprecated. Use an env var instead:"
+  echo "  VERSION=$deprecated_ref sh -c "\`curl https://babushka.me/up\`""
+  printf "${reset}"
   ref=$deprecated_ref
 else
   ref="stable"
