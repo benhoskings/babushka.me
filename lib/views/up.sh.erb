@@ -24,7 +24,7 @@ if [ -n "$VERSION" ]; then
 elif [ -n "$deprecated_ref" ]; then
   printf "${yellow}\n"
   echo "Supplying the version via /up/<version> is deprecated. Use an env var instead:"
-  echo "  VERSION=$deprecated_ref sh -c "\`curl https://babushka.me/up\`""
+  echo "  VERSION=$deprecated_ref sh -c \"\`curl https://babushka.me/up\`\""
   printf "${reset}"
   ref=$deprecated_ref
 else
@@ -39,7 +39,7 @@ if [ -n "$REPO" ]; then
 elif [ -n "$BABUSHKA_REPO" ]; then
   printf "${yellow}\n"
   echo "Supplying the repo via \$BABUSHKA_REPO is deprecated. Use \$REPO instead:"
-  echo "  REPO=$BABUSHKA_REPO sh -c "\`curl https://babushka.me/up\`""
+  echo "  REPO=$BABUSHKA_REPO sh -c \"\`curl https://babushka.me/up\`\""
   printf "${reset}"
   repo=$BABUSHKA_REPO
 fi
