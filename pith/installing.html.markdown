@@ -63,7 +63,7 @@ If you like, you can lock your install by supplying a SHA, which can never chang
 
     VERSION=4ff73e0eda5ff439fd786e4a3bea8568abc95fe2 sh -c "`curl https://babushka.me/up`"
 
-You could also use a tag, for readability (I promise I'll never change a version tag):
+You could also use a tag, for readability (version tags will never be mutated on this repo):
 
     VERSION=v0.16.10 sh -c "`curl https://babushka.me/up`"
 
