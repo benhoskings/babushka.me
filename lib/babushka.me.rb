@@ -23,7 +23,7 @@ class BabushkaMe < Sinatra::Base
 
   get '/up/?' do
     content_type 'text/plain'
-    erb :"up.sh", locals: {ref: 'stable'}
+    erb :"up.sh", locals: {ref: ''}
   end
 
   get '/up/:ref' do
