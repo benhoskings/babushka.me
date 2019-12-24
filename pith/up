@@ -8,25 +8,12 @@ reset="\e[0m"
 #
 # sh -c "`curl https://babushka.me/up`"
 
-# This is the old way of customising the install ref. It's deprecated and will
-# be removed at some point in the future.
-#
-# sh -c "`curl https://babushka.me/up/refspec`"
-#
-deprecated_ref=<%= ref %>
-
 # This is the version to install. It defaults to 'stable' and can be customised
 # by setting the VERSION env var to any git ref (branch, tag, commit):
 #
 # VERSION=refspec sh -c "`curl https://babushka.me/up`"
 if [ -n "$VERSION" ]; then
   ref=$VERSION
-elif [ -n "$deprecated_ref" ]; then
-  printf "${yellow}\n"
-  echo "Supplying the version via /up/<version> is deprecated. Use an env var instead:"
-  echo "  VERSION=$deprecated_ref sh -c \"\`curl https://babushka.me/up\`\""
-  printf "${reset}"
-  ref=$deprecated_ref
 else
   ref="stable"
 fi
