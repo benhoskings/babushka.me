@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang='en'>
+  <head>
+    <meta charset='utf-8'>
+    <title>Babushka - babushka</title>
+    <link href='/styles/styles.css' media='screen' rel='stylesheet' type='text/css'>
+    <meta content='pith 0.2.3' name='generator'>
+    <meta content='width = 688' name='viewport'>
+    <script>
+      if (navigator.userAgent.match(/MSIE/)) {
+        ie_version = navigator.userAgent.match(/MSIE (\d+)/)[1]
+        document.getElementsByTagName('html')[0].className = 'ie' + ie_version
+      }
+    </script>
+    <!--[if lte IE 8]>
+      <script>
+        // html5shiv MIT @rem remysharp.com/html5-enabling-script
+        // iepp v1.6.2 MIT @jon_neal iecss.com/print-protector
+        /*@cc_on(function(m,c){var z="abbr|article|aside|audio|canvas|details|figcaption|figure|footer|header|hgroup|mark|meter|nav|output|progress|section|summary|time|video";function n(d){for(var a=-1;++a<o;)d.createElement(i[a])}function p(d,a){for(var e=-1,b=d.length,j,q=[];++e<b;){j=d[e];if((a=j.media||a)!="screen")q.push(p(j.imports,a),j.cssText)}return q.join("")}var g=c.createElement("div");g.innerHTML="<z>i</z>";if(g.childNodes.length!==1){var i=z.split("|"),o=i.length,s=RegExp("(^|\\s)("+z+")",
+        "gi"),t=RegExp("<(/*)("+z+")","gi"),u=RegExp("(^|[^\\n]*?\\s)("+z+")([^\\n]*)({[\\n\\w\\W]*?})","gi"),r=c.createDocumentFragment(),k=c.documentElement;g=k.firstChild;var h=c.createElement("body"),l=c.createElement("style"),f;n(c);n(r);g.insertBefore(l,
+        g.firstChild);l.media="print";m.attachEvent("onbeforeprint",function(){var d=-1,a=p(c.styleSheets,"all"),e=[],b;for(f=f||c.body;(b=u.exec(a))!=null;)e.push((b[1]+b[2]+b[3]).replace(s,"$1.iepp_$2")+b[4]);for(l.styleSheet.cssText=e.join("\n");++d<o;){a=c.getElementsByTagName(i[d]);e=a.length;for(b=-1;++b<e;)if(a[b].className.indexOf("iepp_")<0)a[b].className+=" iepp_"+i[d]}r.appendChild(f);k.appendChild(h);h.className=f.className;h.innerHTML=f.innerHTML.replace(t,"<$1font")});m.attachEvent("onafterprint",
+        function(){h.innerHTML="";k.removeChild(h);k.appendChild(f);l.styleSheet.cssText=""})}})(this,document);@*/
+      </script>
+    <![endif]-->
+  </head>
+  <body class='babushka'>
+    <aside role='contentinfo'>
+      <a class='ref' href='https://github.com/benhoskings/babushka.me/commit/45f6c29' rel='external'>45f6c29</a>
+    </aside>
+    <h1>
+      <a href='/'>
+        Babushka: test-driven sysadmin.
+      </a>
+    </h1>
+    <section class='nav-wrapper'>
+      <nav>
+        <section class='doll'>
+          <img alt='babushka logo' src='/images/babushka.png'>
+        </section>
+        <section>
+          <h2>&nbsp;&nbsp;&nbsp;&nbsp;Hello</h2>
+          <p>
+            <a href='/overview'>Overview</a>
+            <a href='/installing'>Installing</a>
+          </p>
+        </section>
+        <section>
+          <h2>Equipment</h2>
+          <p>
+            <a href='/running-babushka'>Running babushka</a>
+            <a href='/finding-deps'>Finding deps</a>
+            <a href='/dep-sources'>Dep sources</a>
+            <a href='/running-deps'>Running deps</a>
+          </p>
+        </section>
+        <section>
+          <h2>Materials</h2>
+          <p>
+            <a href='/how-deps-work'>How deps work</a>
+            <a href='/writing-deps'>Writing deps</a>
+            <a href='/dep-examples'>Dep examples</a>
+          </p>
+        </section>
+        <section class='links'>
+          <h2>&nbsp;&nbsp;&nbsp;&nbsp;Links</h2>
+          <p>
+            <a href='http://github.com/benhoskings/babushka'>github</a>
+            <a href='http://rubydoc.info/github/benhoskings/babushka/master/frames'>rdoc</a>
+            <a href='http://groups.google.com/group/babushka_app/topics'>mailing list</a>
+          </p>
+        </section>
+      </nav>
+    </section>
+    <article>
+      <p>
+        <strong>
+          Babushka is a humble tool for automating computing chores.
+        </strong>
+      </p>
+      <p>
+        For each job, a test, and the code to make that test pass. On the left is a babushka dep, and on the right, what happens when it's run.
+      </p>
+      
+            <figure class="precaption code">
+              <pre><code class='ruby'><span class="CodeRay">dep <span class="string"><span class="delimiter">'</span><span class="content">nginx running</span><span class="delimiter">'</span></span> <span class="keyword">do</span>&#x000A;  requires <span class="string"><span class="delimiter">'</span><span class="content">nginx configured</span><span class="delimiter">'</span></span>&#x000A;  <span class="keyword">def</span> <span class="function">netstat_cmd</span>&#x000A;    <span class="string"><span class="delimiter">&quot;</span><span class="content">netstat -an | grep '^tcp.*[.:]80 .*LISTEN'</span><span class="delimiter">&quot;</span></span>&#x000A;  <span class="keyword">end</span>&#x000A;  met? {&#x000A;    shell?(netstat_cmd).tap {|r|&#x000A;      log <span class="string"><span class="delimiter">&quot;</span><span class="inline"><span class="inline-delimiter">#{</span>r ? <span class="string"><span class="delimiter">'</span><span class="content">Some</span><span class="delimiter">'</span></span> : <span class="string"><span class="delimiter">'</span><span class="content">No</span><span class="delimiter">'</span></span><span class="inline-delimiter">}</span></span><span class="content">thing listening.</span><span class="delimiter">&quot;</span></span>&#x000A;    }&#x000A;  }&#x000A;  meet {&#x000A;    log_shell <span class="string"><span class="delimiter">'</span><span class="content">Starting</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">initctl start nginx</span><span class="delimiter">'</span></span>&#x000A;  }&#x000A;<span class="keyword">end</span></span></code></pre>
+              <figcaption>
+                <pre><code>$ babushka ‘nginx running’&#x000A;nginx running {&#x000A;  nginx configured {&#x000A;    ✓ The config is valid.&#x000A;  } ✓ nginx configured&#x000A;  Nothing listening.&#x000A;  meet {&#x000A;    Starting… done.&#x000A;  }&#x000A;  Something listening.&#x000A;} ✓ nginx running&#x000A;</code></pre>
+              </figcaption>
+            </figure>
+      <p>
+        Insta-install:
+        <code><strong>sh -c "`curl https://babushka.me/up`"</strong></code>
+      </p>
+    </article>
+  </body>
+</html>

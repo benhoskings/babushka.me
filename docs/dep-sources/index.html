@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang='en'>
+  <head>
+    <meta charset='utf-8'>
+    <title>Dep sources - babushka</title>
+    <link href='/styles/styles.css' media='screen' rel='stylesheet' type='text/css'>
+    <meta content='pith 0.2.3' name='generator'>
+    <meta content='width = 688' name='viewport'>
+    <script>
+      if (navigator.userAgent.match(/MSIE/)) {
+        ie_version = navigator.userAgent.match(/MSIE (\d+)/)[1]
+        document.getElementsByTagName('html')[0].className = 'ie' + ie_version
+      }
+    </script>
+    <!--[if lte IE 8]>
+      <script>
+        // html5shiv MIT @rem remysharp.com/html5-enabling-script
+        // iepp v1.6.2 MIT @jon_neal iecss.com/print-protector
+        /*@cc_on(function(m,c){var z="abbr|article|aside|audio|canvas|details|figcaption|figure|footer|header|hgroup|mark|meter|nav|output|progress|section|summary|time|video";function n(d){for(var a=-1;++a<o;)d.createElement(i[a])}function p(d,a){for(var e=-1,b=d.length,j,q=[];++e<b;){j=d[e];if((a=j.media||a)!="screen")q.push(p(j.imports,a),j.cssText)}return q.join("")}var g=c.createElement("div");g.innerHTML="<z>i</z>";if(g.childNodes.length!==1){var i=z.split("|"),o=i.length,s=RegExp("(^|\\s)("+z+")",
+        "gi"),t=RegExp("<(/*)("+z+")","gi"),u=RegExp("(^|[^\\n]*?\\s)("+z+")([^\\n]*)({[\\n\\w\\W]*?})","gi"),r=c.createDocumentFragment(),k=c.documentElement;g=k.firstChild;var h=c.createElement("body"),l=c.createElement("style"),f;n(c);n(r);g.insertBefore(l,
+        g.firstChild);l.media="print";m.attachEvent("onbeforeprint",function(){var d=-1,a=p(c.styleSheets,"all"),e=[],b;for(f=f||c.body;(b=u.exec(a))!=null;)e.push((b[1]+b[2]+b[3]).replace(s,"$1.iepp_$2")+b[4]);for(l.styleSheet.cssText=e.join("\n");++d<o;){a=c.getElementsByTagName(i[d]);e=a.length;for(b=-1;++b<e;)if(a[b].className.indexOf("iepp_")<0)a[b].className+=" iepp_"+i[d]}r.appendChild(f);k.appendChild(h);h.className=f.className;h.innerHTML=f.innerHTML.replace(t,"<$1font")});m.attachEvent("onafterprint",
+        function(){h.innerHTML="";k.removeChild(h);k.appendChild(f);l.styleSheet.cssText=""})}})(this,document);@*/
+      </script>
+    <![endif]-->
+  </head>
+  <body class='dep-sources'>
+    <aside role='contentinfo'>
+      <a class='ref' href='https://github.com/benhoskings/babushka.me/commit/45f6c29' rel='external'>45f6c29</a>
+    </aside>
+    <h1>
+      <a href='/'>
+        Babushka: test-driven sysadmin.
+      </a>
+    </h1>
+    <section class='nav-wrapper'>
+      <nav>
+        <section class='doll'>
+          <img alt='babushka logo' src='/images/babushka.png'>
+        </section>
+        <section>
+          <h2>&nbsp;&nbsp;&nbsp;&nbsp;Hello</h2>
+          <p>
+            <a href='/overview'>Overview</a>
+            <a href='/installing'>Installing</a>
+          </p>
+        </section>
+        <section>
+          <h2>Equipment</h2>
+          <p>
+            <a href='/running-babushka'>Running babushka</a>
+            <a href='/finding-deps'>Finding deps</a>
+            <a href='/dep-sources'>Dep sources</a>
+            <a href='/running-deps'>Running deps</a>
+          </p>
+        </section>
+        <section>
+          <h2>Materials</h2>
+          <p>
+            <a href='/how-deps-work'>How deps work</a>
+            <a href='/writing-deps'>Writing deps</a>
+            <a href='/dep-examples'>Dep examples</a>
+          </p>
+        </section>
+        <section class='links'>
+          <h2>&nbsp;&nbsp;&nbsp;&nbsp;Links</h2>
+          <p>
+            <a href='http://github.com/benhoskings/babushka'>github</a>
+            <a href='http://rubydoc.info/github/benhoskings/babushka/master/frames'>rdoc</a>
+            <a href='http://groups.google.com/group/babushka_app/topics'>mailing list</a>
+          </p>
+        </section>
+      </nav>
+    </section>
+    <article>
+      <h1>Dep sources</h1>
+      
+      <p>Babushka only contains the deps that it needs to know how to install itself, and set up a bare minimum of software like package managers, <code>ruby</code> and <code>git</code>. Everything else is stored separately, in <em>dep sources</em>.</p>
+      
+      <p>A dep source is just a git repo, with some deps in it. The organisation and naming of the files within the source is completely up to you - babushka will recursively load all the <code>.rb</code> files it can find in the source, in alphabetical order.</p>
+      
+      <p>You also don’t need to worry about dep or template load order; source loading is a lazy process that first reads every file and sets up the templates, and doesn’t define deps until later, as they’re run.</p>
+      
+      <p>As a convention, I tend to keep related deps together in top-level <code>.rb</code> files, and use a top-level <code>templates/</code> directory for meta deps. But the layout of the files and directories doesn’t affect the way babushka makes the deps &amp; templates available, so use whatever convention you like.</p>
+      
+      <h2 id="dep-source-management">Dep source management</h2>
+      
+      <p>The best way manage your own source is to make <code>~/.babushka/deps</code> a git repo, and push it to <code>https://github.com/username/babushka-deps.git</code>. That will allow you to run your deps like so, on any machine, and for others to do the same:</p>
+      
+      <pre><code>$ babushka username:dep-name
+      </code></pre>
+      
+      <h2 id="local-sources">Local sources</h2>
+      
+      <p>If you want to write deps just for yourself that you don’t plan to share, <code>~/.babushka/deps</code> is still the best place for them; just make the repo private if you do push it online. If you’d rather keep them elsewhere, like in <code>~/src</code> or similar, you can symlink them into <code>~/.babushka/deps</code> instead.</p>
+      
+      <p>Babushka also loads deps from <code>./babushka-deps</code> in the directory from which it was run. This is a good place for project-specific deps, because you can keep them within the project’s source control.</p>
+      
+      <h2 id="using-others-sources">Using others’ sources</h2>
+      
+      <p>To run deps from others’ sources, just prefix the dep name with the correct github username, and babushka will clone the source for you.</p>
+      
+      <pre><code>babushka conversation:coffeescript.src
+      </code></pre>
+      
+      <p>If there’s no source at <code>~/.babushka/sources/conversation</code> then babushka will clone it from <code>github.com/conversation/babushka-deps</code>, and then search within it for a dep called “coffeescript.src”. (You don’t have to worry about naming conflicts with other sources; dep and template names are partitioned per-source.)</p>
+      
+      <p>There’s one exception to this rule: the source name ‘common’ corresponds not to the github user ‘common’ (sorry, Common), but to <a href="http://github.com/benhoskings/common-babushka-deps">benhoskings/common-babushka-deps</a>. In that source, I maintain some deps for common tasks useful to all babushka users, like deploying apps via git repo.</p>
+      
+      <h2 id="customising-sources">Customising sources</h2>
+      
+      <p>The convention system is only a starting point: you can use it as much or as little as you like. Babushka identifies sources purely by name, and only uses the convention to clone sources that aren’t present by name (i.e. when <code>~/.babushka/sources/&lt;name&gt;</code> doesn’t exist).</p>
+      
+      <p>When the source does exist by name, then babushka will happily load from it, no matter where it came from. This makes it very easy to add custom sources, or make sources available in a base VM image, etc. All you have to do is place the appropriate repos in <code>~/.babushka/sources</code>:</p>
+      
+      <pre><code>cd ~/.babushka/sources
+      git clone git://example.org/custom-dep-source.git ./custom
+      </code></pre>
+      
+      <p>That will make a source called ‘custom’ available, from which you can invoke deps like so:</p>
+      
+      <pre><code>babushka custom:'a custom dep'
+      </code></pre>
+      
+      <p>(You can symlink instead of cloning directly into <code>~/.babushka/sources</code>; babushka follows symlinks when loading sources.)</p>
+      
+      <p>There’s also a babushka command you can use to add sources. Internally, all it does it clone the repo; it’s there purely as a convenience:</p>
+      
+      <pre><code>$ babushka sources --add custom git://example.org/custom-dep-source.git
+      </code></pre>
+      
+      <p>Running that command will clone <code>git://example.org/custom-dep-source.git</code> to <code>~/.babushka/sources/custom</code>.</p>
+      
+      <p>To recap, you can name the git repos within <code>~/.babushka/sources</code> however you like, and then use those names whenever you reference deps. It’s only when a named source isn’t present, and babushka auto-clones it, that its name and URI are set by convention.</p>
+      
+      <h2 id="updating-sources">Updating sources</h2>
+      
+      <p>Babushka doesn’t automatically update sources. If you push new or breaking changes to your source, you don’t need to worry about breaking existing babushka setups; anywhere that source is cloned, it will stay put at its current version and continue to work.</p>
+      
+      <p>(In the olden days babushka did auto-update sources, but this behaviour caused too many “dammit, this worked yesterday” surprises.)</p>
+      
+      <p>The only time babushka will change existing sources is when it’s run with the <code>--update</code> option. With this option specified, babushka will lazily update sources before it loads deps from them. That is, <code>--update</code> doesn’t update all existing sources, just each relevant source as it’s referenced down the tree. (A source is only updated once per run.)</p>
+      
+      <p>When updating, babushka fetches from ‘origin’ and then resets the source to ‘origin/master’. There’s a safety check, though, that will prevent updates if the source has uncommitted changes or unpushed commits, to avoid blowing away your local changes (babushka will print a message in this case).</p>
+      
+      <p>As with the repo names, you can use any URI you like for the ‘origin’ remote, including private URIs for which you have credentials, and babushka will follow your lead. It’s only when automatically cloning that the github username convention is used to set the URI.</p>
+    </article>
+  </body>
+</html>
