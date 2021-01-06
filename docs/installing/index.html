@@ -1,191 +1,192 @@
 <!DOCTYPE html>
 <html lang='en'>
-  <head>
-    <meta charset='utf-8'>
-    <title>Installing babushka - babushka</title>
-    <link href='/styles/styles.css' media='screen' rel='stylesheet' type='text/css'>
-    <meta content='pith 0.2.3' name='generator'>
-    <meta content='width = 688' name='viewport'>
-    <script>
-      if (navigator.userAgent.match(/MSIE/)) {
-        ie_version = navigator.userAgent.match(/MSIE (\d+)/)[1]
-        document.getElementsByTagName('html')[0].className = 'ie' + ie_version
-      }
-    </script>
-    <!--[if lte IE 8]>
-      <script>
-        // html5shiv MIT @rem remysharp.com/html5-enabling-script
-        // iepp v1.6.2 MIT @jon_neal iecss.com/print-protector
-        /*@cc_on(function(m,c){var z="abbr|article|aside|audio|canvas|details|figcaption|figure|footer|header|hgroup|mark|meter|nav|output|progress|section|summary|time|video";function n(d){for(var a=-1;++a<o;)d.createElement(i[a])}function p(d,a){for(var e=-1,b=d.length,j,q=[];++e<b;){j=d[e];if((a=j.media||a)!="screen")q.push(p(j.imports,a),j.cssText)}return q.join("")}var g=c.createElement("div");g.innerHTML="<z>i</z>";if(g.childNodes.length!==1){var i=z.split("|"),o=i.length,s=RegExp("(^|\\s)("+z+")",
-        "gi"),t=RegExp("<(/*)("+z+")","gi"),u=RegExp("(^|[^\\n]*?\\s)("+z+")([^\\n]*)({[\\n\\w\\W]*?})","gi"),r=c.createDocumentFragment(),k=c.documentElement;g=k.firstChild;var h=c.createElement("body"),l=c.createElement("style"),f;n(c);n(r);g.insertBefore(l,
-        g.firstChild);l.media="print";m.attachEvent("onbeforeprint",function(){var d=-1,a=p(c.styleSheets,"all"),e=[],b;for(f=f||c.body;(b=u.exec(a))!=null;)e.push((b[1]+b[2]+b[3]).replace(s,"$1.iepp_$2")+b[4]);for(l.styleSheet.cssText=e.join("\n");++d<o;){a=c.getElementsByTagName(i[d]);e=a.length;for(b=-1;++b<e;)if(a[b].className.indexOf("iepp_")<0)a[b].className+=" iepp_"+i[d]}r.appendChild(f);k.appendChild(h);h.className=f.className;h.innerHTML=f.innerHTML.replace(t,"<$1font")});m.attachEvent("onafterprint",
-        function(){h.innerHTML="";k.removeChild(h);k.appendChild(f);l.styleSheet.cssText=""})}})(this,document);@*/
-      </script>
-    <![endif]-->
-  </head>
-  <body class='installing-babushka'>
-    <aside role='contentinfo'>
-      <a class='ref' href='https://github.com/benhoskings/babushka.me/commit/45f6c29' rel='external'>45f6c29</a>
-    </aside>
-    <h1>
-      <a href='/'>
-        Babushka: test-driven sysadmin.
-      </a>
-    </h1>
-    <section class='nav-wrapper'>
-      <nav>
-        <section class='doll'>
-          <img alt='babushka logo' src='/images/babushka.png'>
-        </section>
-        <section>
-          <h2>&nbsp;&nbsp;&nbsp;&nbsp;Hello</h2>
-          <p>
-            <a href='/overview'>Overview</a>
-            <a href='/installing'>Installing</a>
-          </p>
-        </section>
-        <section>
-          <h2>Equipment</h2>
-          <p>
-            <a href='/running-babushka'>Running babushka</a>
-            <a href='/finding-deps'>Finding deps</a>
-            <a href='/dep-sources'>Dep sources</a>
-            <a href='/running-deps'>Running deps</a>
-          </p>
-        </section>
-        <section>
-          <h2>Materials</h2>
-          <p>
-            <a href='/how-deps-work'>How deps work</a>
-            <a href='/writing-deps'>Writing deps</a>
-            <a href='/dep-examples'>Dep examples</a>
-          </p>
-        </section>
-        <section class='links'>
-          <h2>&nbsp;&nbsp;&nbsp;&nbsp;Links</h2>
-          <p>
-            <a href='http://github.com/benhoskings/babushka'>github</a>
-            <a href='http://rubydoc.info/github/benhoskings/babushka/master/frames'>rdoc</a>
-            <a href='http://groups.google.com/group/babushka_app/topics'>mailing list</a>
-          </p>
-        </section>
-      </nav>
-    </section>
-    <article>
-      <h1>Installing babushka</h1>
-      
-      <p>Babushka is best installed using <code>babushka.me/up</code>, a script that installs babushka via git (and some dependencies via your system’s package manager). It’s safe to run on existing systems; if you’re running git and ruby already then all that’s installed is babushka itself.</p>
-      
-      <p>The script is also designed to be used as the initial shell command on a brand new laptop or server. Its only prerequisite, which most systems ship with, is something that can fetch over https. Mac OS X and some Linux distros ship with <code>curl</code>:</p>
-      
-      <pre><code>sh -c "`curl https://babushka.me/up`"
-      </code></pre>
-      
-      <p>If your system doesn’t ship with curl, you can install it first. Here are some examples:</p>
-      
-      <pre><code># on Arch Linux
-      pacman -S curl &amp;&amp; sh -c "`curl https://babushka.me/up`"
-      
-      # on Ubuntu Linux
-      apt-get install -y curl &amp;&amp; sh -c "`curl https://babushka.me/up`"
-      </code></pre>
-      
-      <p>Some other Linux distros ship with <code>wget</code> instead. Many of these stock wget installs lack openssl, which means no https downloads. You could install curl first (which should pull in openssl; see above), or just cowboy it over http with wget:</p>
-      
-      <pre><code>sh -c "`wget -O - babushka.me/up`" # Hijack me, please!
-      </code></pre>
-      
-      <h2 id="what-it-does">What it does</h2>
-      
-      <p>The script is fairly straightforward. Here’s what it does:</p>
-      
-      <ul>
-        <li>Installs ruby &amp; curl via your package manager, as required</li>
-        <li>Downloads a tarball of babushka from github</li>
-        <li>Runs <code>babushka babushka</code> to do the actual install (meta, eh?), which:
-          <ul>
-            <li>Installs git via your package manager, as required
-              <ul>
-                <li>On OS X, the binary package from http://git-scm.com is used instead, otherwise installing babushka would require Xcode.</li>
-              </ul>
-            </li>
-            <li>Clones the babushka repo to <code>/usr/local/babushka</code>, or whatever you choose</li>
-            <li>Symlinks the executable to <code>/usr/local/bin</code></li>
-          </ul>
-        </li>
-      </ul>
-      
-      <p>Here’s <a href="https://babushka.me/up">the script</a> and <a href="https://github.com/benhoskings/babushka.me/blob/master/app/views/bootstrap/up.sh.erb">the template</a> that it’s rendered from if you’d like to review them.</p>
-      
-      <p>Installing babushka doesn’t make any surprising changes to your system. You can completely uninstall it by deleting it:</p>
-      
-      <pre><code>rm -rf /usr/local/babushka /usr/local/bin/babushka
-      </code></pre>
-      
-      <h2 id="scripting-the-install">Scripting the install</h2>
-      
-      <p>The bootstrap script prompts for confirmation and an install prefix. If you’re scripting the install, fear not: it runs unconditionally, accepting the defaults for those prompts, if STDIN isn’t attached to a terminal. If you’d like to run a prompt-less install at the terminal, just attach <code>STDIN</code> to <code>/dev/null</code> instead:</p>
-      
-      <pre><code>sh -c "`curl https://babushka.me/up`" &lt;/dev/null
-      </code></pre>
-      
-      <h2 id="versions">Versions</h2>
-      
-      <p>By default, <code>babushka.me/up</code> will install the latest stable version, but this can be customised. Just set the VERSION env var to a git ref like so (the default is <code>stable</code>):</p>
-      
-      <pre><code>VERSION=&lt;ref&gt; sh -c "`curl https://babushka.me/up`"
-      </code></pre>
-      
-      <p>You can supply any ref that github serves as a tarball: any branch, tag, or SHA will work. Some examples:</p>
-      
-      <ul>
-        <li><code>stable</code> is the latest stable version. I update stable when I tag a new version, and it always fast-forwards (usually to <code>master</code>’s HEAD at the time).</li>
-        <li><code>master</code> is the development tip. I work on master locally, merging topic branches into it, and push to github when the specs are green. Its HEAD is always a descendant of the current <code>stable</code> HEAD.</li>
-      </ul>
-      
-      <p>If you like, you can lock your install by supplying a SHA, which can never change:</p>
-      
-      <pre><code>VERSION=4ff73e0eda5ff439fd786e4a3bea8568abc95fe2 sh -c "`curl https://babushka.me/up`"
-      </code></pre>
-      
-      <p>You could also use a tag, for readability (version tags will never be mutated on this repo):</p>
-      
-      <pre><code>VERSION=v0.16.10 sh -c "`curl https://babushka.me/up`"
-      </code></pre>
-      
-      <h2 id="installing-a-custom-babushka">Installing a custom babushka</h2>
-      
-      <p>By default, babushka is installed from my repo on github, <a href="https://github.com/benhoskings/babushka">benhoskings/babushka</a>. If you like, you can install from your own repo instead by passing a custom repo URI in the <code>$BABUSHKA_REPO</code> environment variable, like so:</p>
-      
-      <pre><code>BABUSHKA_REPO=https://github.com/dgoodlad/babushka.git \
-      VERSION=master \
-        sh -c "`curl https://babushka.me/up`"
-      </code></pre>
-      
-      <p>This is useful for running installs in situations where github isn’t accessible, or if you’d like to install from a fork of babushka.</p>
-      
-      <h2 id="manual-installation">Manual installation</h2>
-      
-      <p>If you’d prefer to install manually, it’s pretty straightforward. First, ensure ruby and git are installed to your taste:</p>
-      
-      <pre><code>pacman -S ruby git # Adjust for your system as required
-      </code></pre>
-      
-      <p>Grab a local copy of babushka from <a href="https://github.com/benhoskings/babushka">the githubs</a>:</p>
-      
-      <pre><code>git clone https://github.com/benhoskings/babushka.git ./babushka
-      cd babushka
-      </code></pre>
-      
-      <p>Then you can run babushka with <code>./bin/babushka.rb</code>, or if you like, symlink it into your PATH:</p>
-      
-      <pre><code>cd /usr/local/bin
-      ln -s /path/to/babushka/bin/babushka.rb ./babushka
-      </code></pre>
-      
-      <h2 id="my-kingdom-for-a-gem">My kingdom for a gem</h2>
-      
-      <p>Even though babushka is a ruby app, there’s no gem distribution. The reason for this is that setting up a particular ruby build, rubygems, and maybe rbenv or chruby along the way is just the kind of thing babushka is good at. So in the interests of consistency, I recommend installing babushka via git repo every time, whether or not you use <code>babushka.me/up</code> to do it.</p>
-    </article>
-  </body>
+<head>
+<meta charset='utf-8'>
+<title>Installing babushka - babushka</title>
+<link href='/styles/styles.css' media='screen' rel='stylesheet' type='text/css'>
+<meta content='pith 0.2.3' name='generator'>
+<meta content='width = 688' name='viewport'>
+<script>
+  if (navigator.userAgent.match(/MSIE/)) {
+    ie_version = navigator.userAgent.match(/MSIE (\d+)/)[1]
+    document.getElementsByTagName('html')[0].className = 'ie' + ie_version
+  }
+</script>
+<!--[if lte IE 8]>
+<script>
+  // html5shiv MIT @rem remysharp.com/html5-enabling-script
+  // iepp v1.6.2 MIT @jon_neal iecss.com/print-protector
+  /*@cc_on(function(m,c){var z="abbr|article|aside|audio|canvas|details|figcaption|figure|footer|header|hgroup|mark|meter|nav|output|progress|section|summary|time|video";function n(d){for(var a=-1;++a<o;)d.createElement(i[a])}function p(d,a){for(var e=-1,b=d.length,j,q=[];++e<b;){j=d[e];if((a=j.media||a)!="screen")q.push(p(j.imports,a),j.cssText)}return q.join("")}var g=c.createElement("div");g.innerHTML="<z>i</z>";if(g.childNodes.length!==1){var i=z.split("|"),o=i.length,s=RegExp("(^|\\s)("+z+")",
+  "gi"),t=RegExp("<(/*)("+z+")","gi"),u=RegExp("(^|[^\\n]*?\\s)("+z+")([^\\n]*)({[\\n\\w\\W]*?})","gi"),r=c.createDocumentFragment(),k=c.documentElement;g=k.firstChild;var h=c.createElement("body"),l=c.createElement("style"),f;n(c);n(r);g.insertBefore(l,
+  g.firstChild);l.media="print";m.attachEvent("onbeforeprint",function(){var d=-1,a=p(c.styleSheets,"all"),e=[],b;for(f=f||c.body;(b=u.exec(a))!=null;)e.push((b[1]+b[2]+b[3]).replace(s,"$1.iepp_$2")+b[4]);for(l.styleSheet.cssText=e.join("\n");++d<o;){a=c.getElementsByTagName(i[d]);e=a.length;for(b=-1;++b<e;)if(a[b].className.indexOf("iepp_")<0)a[b].className+=" iepp_"+i[d]}r.appendChild(f);k.appendChild(h);h.className=f.className;h.innerHTML=f.innerHTML.replace(t,"<$1font")});m.attachEvent("onafterprint",
+  function(){h.innerHTML="";k.removeChild(h);k.appendChild(f);l.styleSheet.cssText=""})}})(this,document);@*/
+</script>
+<![endif]-->
+</head>
+<body class='installing-babushka'>
+<aside role='contentinfo'>
+<a class='ref' href='https://github.com/benhoskings/babushka.me/commit/c491905' rel='external'>c491905</a>
+</aside>
+<h1>
+<a href='/'>
+Babushka: test-driven sysadmin.
+</a>
+</h1>
+<section class='nav-wrapper'>
+<nav>
+<section class='doll'>
+<img alt='babushka logo' src='/images/babushka.png'>
+</section>
+<section>
+<h2>&nbsp;&nbsp;&nbsp;&nbsp;Hello</h2>
+<p>
+<a href='/overview'>Overview</a>
+<a href='/installing'>Installing</a>
+</p>
+</section>
+<section>
+<h2>Equipment</h2>
+<p>
+<a href='/running-babushka'>Running babushka</a>
+<a href='/finding-deps'>Finding deps</a>
+<a href='/dep-sources'>Dep sources</a>
+<a href='/running-deps'>Running deps</a>
+</p>
+</section>
+<section>
+<h2>Materials</h2>
+<p>
+<a href='/how-deps-work'>How deps work</a>
+<a href='/writing-deps'>Writing deps</a>
+<a href='/dep-examples'>Dep examples</a>
+</p>
+</section>
+<section class='links'>
+<h2>&nbsp;&nbsp;&nbsp;&nbsp;Links</h2>
+<p>
+<a href='http://github.com/benhoskings/babushka'>github</a>
+<a href='http://rubydoc.info/github/benhoskings/babushka/master/frames'>rdoc</a>
+<a href='http://groups.google.com/group/babushka_app/topics'>mailing list</a>
+</p>
+</section>
+</nav>
+</section>
+<article>
+<h1>Installing babushka</h1>
+
+<p>Babushka is best installed using <code>babushka.me/up</code>, a script that installs babushka via git (and some dependencies via your system’s package manager). It’s safe to run on existing systems; if you’re running git and ruby already then all that’s installed is babushka itself.</p>
+
+<p>The script is also designed to be used as the initial shell command on a brand new laptop or server. Its only prerequisite, which most systems ship with, is something that can fetch over https. Mac OS X and some Linux distros ship with <code>curl</code>:</p>
+
+<pre><code>sh -c "`curl https://babushka.me/up`"
+</code></pre>
+
+<p>If your system doesn’t ship with curl, you can install it first. Here are some examples:</p>
+
+<pre><code># on Arch Linux
+pacman -S curl &amp;&amp; sh -c "`curl https://babushka.me/up`"
+
+# on Ubuntu Linux
+apt-get install -y curl &amp;&amp; sh -c "`curl https://babushka.me/up`"
+</code></pre>
+
+<p>Some other Linux distros ship with <code>wget</code> instead. Many of these stock wget installs lack openssl, which means no https downloads. You could install curl first (which should pull in openssl; see above), or just cowboy it over http with wget:</p>
+
+<pre><code>sh -c "`wget -O - babushka.me/up`" # Hijack me, please!
+</code></pre>
+
+<h2 id="what-it-does">What it does</h2>
+
+<p>The script is fairly straightforward. Here’s what it does:</p>
+
+<ul>
+  <li>Installs ruby &amp; curl via your package manager, as required</li>
+  <li>Downloads a tarball of babushka from github</li>
+  <li>Runs <code>babushka babushka</code> to do the actual install (meta, eh?), which:
+    <ul>
+      <li>Installs git via your package manager, as required
+        <ul>
+          <li>On OS X, the binary package from http://git-scm.com is used instead, otherwise installing babushka would require Xcode.</li>
+        </ul>
+      </li>
+      <li>Clones the babushka repo to <code>/usr/local/babushka</code>, or whatever you choose</li>
+      <li>Symlinks the executable to <code>/usr/local/bin</code></li>
+    </ul>
+  </li>
+</ul>
+
+<p>Here’s <a href="https://babushka.me/up">the script</a> and <a href="https://github.com/benhoskings/babushka.me/blob/master/app/views/bootstrap/up.sh.erb">the template</a> that it’s rendered from if you’d like to review them.</p>
+
+<p>Installing babushka doesn’t make any surprising changes to your system. You can completely uninstall it by deleting it:</p>
+
+<pre><code>rm -rf /usr/local/babushka /usr/local/bin/babushka
+</code></pre>
+
+<h2 id="scripting-the-install">Scripting the install</h2>
+
+<p>The bootstrap script prompts for confirmation and an install prefix. If you’re scripting the install, fear not: it runs unconditionally, accepting the defaults for those prompts, if STDIN isn’t attached to a terminal. If you’d like to run a prompt-less install at the terminal, just attach <code>STDIN</code> to <code>/dev/null</code> instead:</p>
+
+<pre><code>sh -c "`curl https://babushka.me/up`" &lt;/dev/null
+</code></pre>
+
+<h2 id="versions">Versions</h2>
+
+<p>By default, <code>babushka.me/up</code> will install the latest stable version, but this can be customised. Just set the VERSION env var to a git ref like so (the default is <code>stable</code>):</p>
+
+<pre><code>VERSION=&lt;ref&gt; sh -c "`curl https://babushka.me/up`"
+</code></pre>
+
+<p>You can supply any ref that github serves as a tarball: any branch, tag, or SHA will work. Some examples:</p>
+
+<ul>
+  <li><code>stable</code> is the latest stable version. I update stable when I tag a new version, and it always fast-forwards (usually to <code>master</code>’s HEAD at the time).</li>
+  <li><code>master</code> is the development tip. I work on master locally, merging topic branches into it, and push to github when the specs are green. Its HEAD is always a descendant of the current <code>stable</code> HEAD.</li>
+</ul>
+
+<p>If you like, you can lock your install by supplying a SHA, which can never change:</p>
+
+<pre><code>VERSION=4ff73e0eda5ff439fd786e4a3bea8568abc95fe2 sh -c "`curl https://babushka.me/up`"
+</code></pre>
+
+<p>You could also use a tag, for readability (version tags will never be mutated on this repo):</p>
+
+<pre><code>VERSION=v0.16.10 sh -c "`curl https://babushka.me/up`"
+</code></pre>
+
+<h2 id="installing-a-custom-babushka">Installing a custom babushka</h2>
+
+<p>By default, babushka is installed from my repo on github, <a href="https://github.com/benhoskings/babushka">benhoskings/babushka</a>. If you like, you can install from your own repo instead by passing a custom repo URI in the <code>$BABUSHKA_REPO</code> environment variable, like so:</p>
+
+<pre><code>BABUSHKA_REPO=https://github.com/dgoodlad/babushka.git \
+VERSION=master \
+  sh -c "`curl https://babushka.me/up`"
+</code></pre>
+
+<p>This is useful for running installs in situations where github isn’t accessible, or if you’d like to install from a fork of babushka.</p>
+
+<h2 id="manual-installation">Manual installation</h2>
+
+<p>If you’d prefer to install manually, it’s pretty straightforward. First, ensure ruby and git are installed to your taste:</p>
+
+<pre><code>pacman -S ruby git # Adjust for your system as required
+</code></pre>
+
+<p>Grab a local copy of babushka from <a href="https://github.com/benhoskings/babushka">the githubs</a>:</p>
+
+<pre><code>git clone https://github.com/benhoskings/babushka.git ./babushka
+cd babushka
+</code></pre>
+
+<p>Then you can run babushka with <code>./bin/babushka.rb</code>, or if you like, symlink it into your PATH:</p>
+
+<pre><code>cd /usr/local/bin
+ln -s /path/to/babushka/bin/babushka.rb ./babushka
+</code></pre>
+
+<h2 id="my-kingdom-for-a-gem">My kingdom for a gem</h2>
+
+<p>Even though babushka is a ruby app, there’s no gem distribution. The reason for this is that setting up a particular ruby build, rubygems, and maybe rbenv or chruby along the way is just the kind of thing babushka is good at. So in the interests of consistency, I recommend installing babushka via git repo every time, whether or not you use <code>babushka.me/up</code> to do it.</p>
+
+</article>
+</body>
 </html>

@@ -1,121 +1,122 @@
 <!DOCTYPE html>
 <html lang='en'>
-  <head>
-    <meta charset='utf-8'>
-    <title>Overview - babushka</title>
-    <link href='/styles/styles.css' media='screen' rel='stylesheet' type='text/css'>
-    <meta content='pith 0.2.3' name='generator'>
-    <meta content='width = 688' name='viewport'>
-    <script>
-      if (navigator.userAgent.match(/MSIE/)) {
-        ie_version = navigator.userAgent.match(/MSIE (\d+)/)[1]
-        document.getElementsByTagName('html')[0].className = 'ie' + ie_version
-      }
-    </script>
-    <!--[if lte IE 8]>
-      <script>
-        // html5shiv MIT @rem remysharp.com/html5-enabling-script
-        // iepp v1.6.2 MIT @jon_neal iecss.com/print-protector
-        /*@cc_on(function(m,c){var z="abbr|article|aside|audio|canvas|details|figcaption|figure|footer|header|hgroup|mark|meter|nav|output|progress|section|summary|time|video";function n(d){for(var a=-1;++a<o;)d.createElement(i[a])}function p(d,a){for(var e=-1,b=d.length,j,q=[];++e<b;){j=d[e];if((a=j.media||a)!="screen")q.push(p(j.imports,a),j.cssText)}return q.join("")}var g=c.createElement("div");g.innerHTML="<z>i</z>";if(g.childNodes.length!==1){var i=z.split("|"),o=i.length,s=RegExp("(^|\\s)("+z+")",
-        "gi"),t=RegExp("<(/*)("+z+")","gi"),u=RegExp("(^|[^\\n]*?\\s)("+z+")([^\\n]*)({[\\n\\w\\W]*?})","gi"),r=c.createDocumentFragment(),k=c.documentElement;g=k.firstChild;var h=c.createElement("body"),l=c.createElement("style"),f;n(c);n(r);g.insertBefore(l,
-        g.firstChild);l.media="print";m.attachEvent("onbeforeprint",function(){var d=-1,a=p(c.styleSheets,"all"),e=[],b;for(f=f||c.body;(b=u.exec(a))!=null;)e.push((b[1]+b[2]+b[3]).replace(s,"$1.iepp_$2")+b[4]);for(l.styleSheet.cssText=e.join("\n");++d<o;){a=c.getElementsByTagName(i[d]);e=a.length;for(b=-1;++b<e;)if(a[b].className.indexOf("iepp_")<0)a[b].className+=" iepp_"+i[d]}r.appendChild(f);k.appendChild(h);h.className=f.className;h.innerHTML=f.innerHTML.replace(t,"<$1font")});m.attachEvent("onafterprint",
-        function(){h.innerHTML="";k.removeChild(h);k.appendChild(f);l.styleSheet.cssText=""})}})(this,document);@*/
-      </script>
-    <![endif]-->
-  </head>
-  <body class='overview'>
-    <aside role='contentinfo'>
-      <a class='ref' href='https://github.com/benhoskings/babushka.me/commit/45f6c29' rel='external'>45f6c29</a>
-    </aside>
-    <h1>
-      <a href='/'>
-        Babushka: test-driven sysadmin.
-      </a>
-    </h1>
-    <section class='nav-wrapper'>
-      <nav>
-        <section class='doll'>
-          <img alt='babushka logo' src='/images/babushka.png'>
-        </section>
-        <section>
-          <h2>&nbsp;&nbsp;&nbsp;&nbsp;Hello</h2>
-          <p>
-            <a href='/overview'>Overview</a>
-            <a href='/installing'>Installing</a>
-          </p>
-        </section>
-        <section>
-          <h2>Equipment</h2>
-          <p>
-            <a href='/running-babushka'>Running babushka</a>
-            <a href='/finding-deps'>Finding deps</a>
-            <a href='/dep-sources'>Dep sources</a>
-            <a href='/running-deps'>Running deps</a>
-          </p>
-        </section>
-        <section>
-          <h2>Materials</h2>
-          <p>
-            <a href='/how-deps-work'>How deps work</a>
-            <a href='/writing-deps'>Writing deps</a>
-            <a href='/dep-examples'>Dep examples</a>
-          </p>
-        </section>
-        <section class='links'>
-          <h2>&nbsp;&nbsp;&nbsp;&nbsp;Links</h2>
-          <p>
-            <a href='http://github.com/benhoskings/babushka'>github</a>
-            <a href='http://rubydoc.info/github/benhoskings/babushka/master/frames'>rdoc</a>
-            <a href='http://groups.google.com/group/babushka_app/topics'>mailing list</a>
-          </p>
-        </section>
-      </nav>
-    </section>
-    <article>
-      <h1>Overview</h1>
-      <p>When you spend time researching something new, it&#8217;s pretty easy to forget what you found. That means next time, you have to re-research it again.</p>
-      
-      <p>A lot of the tech jobs we do manually aren&#8217;t challenging or fun, but they&#8217;re quite particular and have to be done just right &#8211; they&#8217;re chores. Things that are important to do, but that are better automated than done manually.</p>
-      
-      <p>That&#8217;s what babushka is for. Once you describe a job using its DSL, babushka can not only accomplish each part of the job, but also check if each part is already satisfied. For each component of the job, a test, along with the code to make that test pass &#8211; test-driven sysadmin.</p>
-      
-      <h2 id="sounds-lofty">Sounds lofty.</h2>
-      
-      <p>I promise it isn&#8217;t. The babushka idea is to use little snippets of ruby that do those jobs you can never remember exactly off the cuff. In each one, an action, and a corresponding test.</p>
-      <pre><code class='ruby'><span class="CodeRay">dep <span class="string"><span class="delimiter">'</span><span class="content">public key</span><span class="delimiter">'</span></span> <span class="keyword">do</span>&#x000A;  met? { grep <span class="regexp"><span class="delimiter">/</span><span class="content">^ssh-dss</span><span class="delimiter">/</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">~/.ssh/id_dsa.pub</span><span class="delimiter">'</span></span> }&#x000A;  meet { log_shell <span class="string"><span class="delimiter">&quot;</span><span class="content">Generating a new key</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">ssh-keygen -t dsa -f ~/.ssh/id_dsa -N ''</span><span class="delimiter">&quot;</span></span> }&#x000A;<span class="keyword">end</span></span></code></pre>
-      <p>That little chunk of ruby lets you do this:</p>
-      
-      <pre><code>⚡ babushka 'public key'&#x000A;public key {&#x000A;  meet {&#x000A;    Generating a new key... done.&#x000A;  }&#x000A;} ✓ public key&#x000A;</code></pre>
-      
-      <p>Babushka starts with <code>met?</code>, which in this case returned something falsey – a failing test. Next, it called <code>meet</code>, which generated a new key, throwing away the return value. And now <code>met?</code> returns true-ish, which means that running <code>meet</code> made the failing <code>met?</code> test pass. Success!</p>
-      
-      <p>This “met, meet, met” behaviour defines how babushka works. A failing test, the action to make it pass, and then the test again, hopefully passing.</p>
-      
-      <p>If we run it a second time, we see this:</p>
-      
-      <pre><code>⚡ babushka 'public key'&#x000A;public key {&#x000A;} ✓ public key&#x000A;</code></pre>
-      
-      <p>Babushka starts with the <code>met?</code> test like the first time, but since it’s already passing now, there’s nothing to do.</p>
-      
-      <h2 id="self-documenting-code">Self-documenting code</h2>
-      
-      <p>Deps are written in a declarative style, which makes them a good reference too. Reading over the <code>'public key'</code> dep above, you check if you have a public key by inspecting <code>~/.ssh/id_dsa.pub</code>, and you generate a new one by running <code>ssh-keygen</code> with a certain set of options.</p>
-      
-      <p>The idea is maximising that signal-to-noise ratio: as much of the code in the dep above should be talking about ssh keys, not about other things that can be inferred elsewhere.</p>
-      
-      <p>Notice also that there’s no conditional logic within the dep. That’s by design: the conditional stuff is handled by babushka; the dep’s job is to define seperate, unconditional chunks of logic for babushka to work with.</p>
-      
-      <h2 id="design-priorities">Design priorities</h2>
-      
-      <p>I’ve tried hard to focus on the idea of “no job too small”, keeping things lo-fi and trusting the power of unix and git to solve problems for me where it makes sense.</p>
-      
-      <h2 id="os-support">OS support</h2>
-      
-      <p>Babushka should run on any Unix. OS X and Ubuntu are fully supported, including their respective package managers, homebrew and apt. There is some yum (RedHat/Fedora/CentOS) and pacman (Arch) support, but I’m not familiar with those systems so it might be non-optimal or incomplete. Patches are most welcome.</p>
-      
-      <h2 id="and-yeah">And, yeah…</h2>
-      
-      <p>It’s true, babushka means “grandmother” in Russian. The thing is, here in Australia, “babushka doll” is the colloquial term for Russian nesting dolls. Deps are intended to be small, tidy chunks of code, nested within each other - hence the name.</p>
-    </article>
-  </body>
+<head>
+<meta charset='utf-8'>
+<title>Overview - babushka</title>
+<link href='/styles/styles.css' media='screen' rel='stylesheet' type='text/css'>
+<meta content='pith 0.2.3' name='generator'>
+<meta content='width = 688' name='viewport'>
+<script>
+  if (navigator.userAgent.match(/MSIE/)) {
+    ie_version = navigator.userAgent.match(/MSIE (\d+)/)[1]
+    document.getElementsByTagName('html')[0].className = 'ie' + ie_version
+  }
+</script>
+<!--[if lte IE 8]>
+<script>
+  // html5shiv MIT @rem remysharp.com/html5-enabling-script
+  // iepp v1.6.2 MIT @jon_neal iecss.com/print-protector
+  /*@cc_on(function(m,c){var z="abbr|article|aside|audio|canvas|details|figcaption|figure|footer|header|hgroup|mark|meter|nav|output|progress|section|summary|time|video";function n(d){for(var a=-1;++a<o;)d.createElement(i[a])}function p(d,a){for(var e=-1,b=d.length,j,q=[];++e<b;){j=d[e];if((a=j.media||a)!="screen")q.push(p(j.imports,a),j.cssText)}return q.join("")}var g=c.createElement("div");g.innerHTML="<z>i</z>";if(g.childNodes.length!==1){var i=z.split("|"),o=i.length,s=RegExp("(^|\\s)("+z+")",
+  "gi"),t=RegExp("<(/*)("+z+")","gi"),u=RegExp("(^|[^\\n]*?\\s)("+z+")([^\\n]*)({[\\n\\w\\W]*?})","gi"),r=c.createDocumentFragment(),k=c.documentElement;g=k.firstChild;var h=c.createElement("body"),l=c.createElement("style"),f;n(c);n(r);g.insertBefore(l,
+  g.firstChild);l.media="print";m.attachEvent("onbeforeprint",function(){var d=-1,a=p(c.styleSheets,"all"),e=[],b;for(f=f||c.body;(b=u.exec(a))!=null;)e.push((b[1]+b[2]+b[3]).replace(s,"$1.iepp_$2")+b[4]);for(l.styleSheet.cssText=e.join("\n");++d<o;){a=c.getElementsByTagName(i[d]);e=a.length;for(b=-1;++b<e;)if(a[b].className.indexOf("iepp_")<0)a[b].className+=" iepp_"+i[d]}r.appendChild(f);k.appendChild(h);h.className=f.className;h.innerHTML=f.innerHTML.replace(t,"<$1font")});m.attachEvent("onafterprint",
+  function(){h.innerHTML="";k.removeChild(h);k.appendChild(f);l.styleSheet.cssText=""})}})(this,document);@*/
+</script>
+<![endif]-->
+</head>
+<body class='overview'>
+<aside role='contentinfo'>
+<a class='ref' href='https://github.com/benhoskings/babushka.me/commit/c491905' rel='external'>c491905</a>
+</aside>
+<h1>
+<a href='/'>
+Babushka: test-driven sysadmin.
+</a>
+</h1>
+<section class='nav-wrapper'>
+<nav>
+<section class='doll'>
+<img alt='babushka logo' src='/images/babushka.png'>
+</section>
+<section>
+<h2>&nbsp;&nbsp;&nbsp;&nbsp;Hello</h2>
+<p>
+<a href='/overview'>Overview</a>
+<a href='/installing'>Installing</a>
+</p>
+</section>
+<section>
+<h2>Equipment</h2>
+<p>
+<a href='/running-babushka'>Running babushka</a>
+<a href='/finding-deps'>Finding deps</a>
+<a href='/dep-sources'>Dep sources</a>
+<a href='/running-deps'>Running deps</a>
+</p>
+</section>
+<section>
+<h2>Materials</h2>
+<p>
+<a href='/how-deps-work'>How deps work</a>
+<a href='/writing-deps'>Writing deps</a>
+<a href='/dep-examples'>Dep examples</a>
+</p>
+</section>
+<section class='links'>
+<h2>&nbsp;&nbsp;&nbsp;&nbsp;Links</h2>
+<p>
+<a href='http://github.com/benhoskings/babushka'>github</a>
+<a href='http://rubydoc.info/github/benhoskings/babushka/master/frames'>rdoc</a>
+<a href='http://groups.google.com/group/babushka_app/topics'>mailing list</a>
+</p>
+</section>
+</nav>
+</section>
+<article>
+<h1>Overview</h1>
+<p>When you spend time researching something new, it&#8217;s pretty easy to forget what you found. That means next time, you have to re-research it again.</p>
+
+<p>A lot of the tech jobs we do manually aren&#8217;t challenging or fun, but they&#8217;re quite particular and have to be done just right &#8211; they&#8217;re chores. Things that are important to do, but that are better automated than done manually.</p>
+
+<p>That&#8217;s what babushka is for. Once you describe a job using its DSL, babushka can not only accomplish each part of the job, but also check if each part is already satisfied. For each component of the job, a test, along with the code to make that test pass &#8211; test-driven sysadmin.</p>
+
+<h2 id="sounds-lofty">Sounds lofty.</h2>
+
+<p>I promise it isn&#8217;t. The babushka idea is to use little snippets of ruby that do those jobs you can never remember exactly off the cuff. In each one, an action, and a corresponding test.</p>
+<pre><code class='ruby'><span class="CodeRay">dep <span class="string"><span class="delimiter">'</span><span class="content">public key</span><span class="delimiter">'</span></span> <span class="keyword">do</span>&#x000A;  met? { grep <span class="regexp"><span class="delimiter">/</span><span class="content">^ssh-dss</span><span class="delimiter">/</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">~/.ssh/id_dsa.pub</span><span class="delimiter">'</span></span> }&#x000A;  meet { log_shell <span class="string"><span class="delimiter">&quot;</span><span class="content">Generating a new key</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">ssh-keygen -t dsa -f ~/.ssh/id_dsa -N ''</span><span class="delimiter">&quot;</span></span> }&#x000A;<span class="keyword">end</span></span></code></pre>
+<p>That little chunk of ruby lets you do this:</p>
+
+<pre><code>⚡ babushka 'public key'&#x000A;public key {&#x000A;  meet {&#x000A;    Generating a new key... done.&#x000A;  }&#x000A;} ✓ public key&#x000A;</code></pre>
+
+<p>Babushka starts with <code>met?</code>, which in this case returned something falsey – a failing test. Next, it called <code>meet</code>, which generated a new key, throwing away the return value. And now <code>met?</code> returns true-ish, which means that running <code>meet</code> made the failing <code>met?</code> test pass. Success!</p>
+
+<p>This “met, meet, met” behaviour defines how babushka works. A failing test, the action to make it pass, and then the test again, hopefully passing.</p>
+
+<p>If we run it a second time, we see this:</p>
+
+<pre><code>⚡ babushka 'public key'&#x000A;public key {&#x000A;} ✓ public key&#x000A;</code></pre>
+
+<p>Babushka starts with the <code>met?</code> test like the first time, but since it’s already passing now, there’s nothing to do.</p>
+
+<h2 id="self-documenting-code">Self-documenting code</h2>
+
+<p>Deps are written in a declarative style, which makes them a good reference too. Reading over the <code>'public key'</code> dep above, you check if you have a public key by inspecting <code>~/.ssh/id_dsa.pub</code>, and you generate a new one by running <code>ssh-keygen</code> with a certain set of options.</p>
+
+<p>The idea is maximising that signal-to-noise ratio: as much of the code in the dep above should be talking about ssh keys, not about other things that can be inferred elsewhere.</p>
+
+<p>Notice also that there’s no conditional logic within the dep. That’s by design: the conditional stuff is handled by babushka; the dep’s job is to define seperate, unconditional chunks of logic for babushka to work with.</p>
+
+<h2 id="design-priorities">Design priorities</h2>
+
+<p>I’ve tried hard to focus on the idea of “no job too small”, keeping things lo-fi and trusting the power of unix and git to solve problems for me where it makes sense.</p>
+
+<h2 id="os-support">OS support</h2>
+
+<p>Babushka should run on any Unix. OS X and Ubuntu are fully supported, including their respective package managers, homebrew and apt. There is some yum (RedHat/Fedora/CentOS) and pacman (Arch) support, but I’m not familiar with those systems so it might be non-optimal or incomplete. Patches are most welcome.</p>
+
+<h2 id="and-yeah">And, yeah…</h2>
+
+<p>It’s true, babushka means “grandmother” in Russian. The thing is, here in Australia, “babushka doll” is the colloquial term for Russian nesting dolls. Deps are intended to be small, tidy chunks of code, nested within each other - hence the name.</p>
+
+</article>
+</body>
 </html>

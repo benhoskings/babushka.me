@@ -1,112 +1,114 @@
 <!DOCTYPE html>
 <html lang='en'>
-  <head>
-    <meta charset='utf-8'>
-    <title>Finding deps - babushka</title>
-    <link href='/styles/styles.css' media='screen' rel='stylesheet' type='text/css'>
-    <meta content='pith 0.2.3' name='generator'>
-    <meta content='width = 688' name='viewport'>
-    <script>
-      if (navigator.userAgent.match(/MSIE/)) {
-        ie_version = navigator.userAgent.match(/MSIE (\d+)/)[1]
-        document.getElementsByTagName('html')[0].className = 'ie' + ie_version
-      }
-    </script>
-    <!--[if lte IE 8]>
-      <script>
-        // html5shiv MIT @rem remysharp.com/html5-enabling-script
-        // iepp v1.6.2 MIT @jon_neal iecss.com/print-protector
-        /*@cc_on(function(m,c){var z="abbr|article|aside|audio|canvas|details|figcaption|figure|footer|header|hgroup|mark|meter|nav|output|progress|section|summary|time|video";function n(d){for(var a=-1;++a<o;)d.createElement(i[a])}function p(d,a){for(var e=-1,b=d.length,j,q=[];++e<b;){j=d[e];if((a=j.media||a)!="screen")q.push(p(j.imports,a),j.cssText)}return q.join("")}var g=c.createElement("div");g.innerHTML="<z>i</z>";if(g.childNodes.length!==1){var i=z.split("|"),o=i.length,s=RegExp("(^|\\s)("+z+")",
-        "gi"),t=RegExp("<(/*)("+z+")","gi"),u=RegExp("(^|[^\\n]*?\\s)("+z+")([^\\n]*)({[\\n\\w\\W]*?})","gi"),r=c.createDocumentFragment(),k=c.documentElement;g=k.firstChild;var h=c.createElement("body"),l=c.createElement("style"),f;n(c);n(r);g.insertBefore(l,
-        g.firstChild);l.media="print";m.attachEvent("onbeforeprint",function(){var d=-1,a=p(c.styleSheets,"all"),e=[],b;for(f=f||c.body;(b=u.exec(a))!=null;)e.push((b[1]+b[2]+b[3]).replace(s,"$1.iepp_$2")+b[4]);for(l.styleSheet.cssText=e.join("\n");++d<o;){a=c.getElementsByTagName(i[d]);e=a.length;for(b=-1;++b<e;)if(a[b].className.indexOf("iepp_")<0)a[b].className+=" iepp_"+i[d]}r.appendChild(f);k.appendChild(h);h.className=f.className;h.innerHTML=f.innerHTML.replace(t,"<$1font")});m.attachEvent("onafterprint",
-        function(){h.innerHTML="";k.removeChild(h);k.appendChild(f);l.styleSheet.cssText=""})}})(this,document);@*/
-      </script>
-    <![endif]-->
-  </head>
-  <body class='finding-deps'>
-    <aside role='contentinfo'>
-      <a class='ref' href='https://github.com/benhoskings/babushka.me/commit/45f6c29' rel='external'>45f6c29</a>
-    </aside>
-    <h1>
-      <a href='/'>
-        Babushka: test-driven sysadmin.
-      </a>
-    </h1>
-    <section class='nav-wrapper'>
-      <nav>
-        <section class='doll'>
-          <img alt='babushka logo' src='/images/babushka.png'>
-        </section>
-        <section>
-          <h2>&nbsp;&nbsp;&nbsp;&nbsp;Hello</h2>
-          <p>
-            <a href='/overview'>Overview</a>
-            <a href='/installing'>Installing</a>
-          </p>
-        </section>
-        <section>
-          <h2>Equipment</h2>
-          <p>
-            <a href='/running-babushka'>Running babushka</a>
-            <a href='/finding-deps'>Finding deps</a>
-            <a href='/dep-sources'>Dep sources</a>
-            <a href='/running-deps'>Running deps</a>
-          </p>
-        </section>
-        <section>
-          <h2>Materials</h2>
-          <p>
-            <a href='/how-deps-work'>How deps work</a>
-            <a href='/writing-deps'>Writing deps</a>
-            <a href='/dep-examples'>Dep examples</a>
-          </p>
-        </section>
-        <section class='links'>
-          <h2>&nbsp;&nbsp;&nbsp;&nbsp;Links</h2>
-          <p>
-            <a href='http://github.com/benhoskings/babushka'>github</a>
-            <a href='http://rubydoc.info/github/benhoskings/babushka/master/frames'>rdoc</a>
-            <a href='http://groups.google.com/group/babushka_app/topics'>mailing list</a>
-          </p>
-        </section>
-      </nav>
-    </section>
-    <article>
-      <h1>Finding deps</h1>
-      
-      <p>You can <a href="https://github.com/search?q=babushka-deps">search on github</a> for deps you might like to use, using the term ‘babushka-deps’.</p>
-      
-      <h2 id="trust">Trust</h2>
-      
-      <p>Deps can run any ruby code. Since ruby can shell out, a dep can run any code at all. A maliciously written dep could add your machine to a botnet, or email your ssh key to a mobster, or anything crafty or untoward you can think of.</p>
-      
-      <p>(This is true of any code you run on your machine. If you run it, you’re trusting it.)</p>
-      
-      <p>Babushka has no security features at all. This is by design, because the only real type of security is a network of trust. Anything else is, <a href="http://www.youtube.com/watch?v=4XpnKHJAok8#t=27m36s">as Linus Torvalds said</a>, masturbation.</p>
-      
-      <p>The upshot: Only run deps written by people you trust to get them right, or deps whose code you’ve inspected beforehand.</p>
-      
-      <p>In particular, <code>--dry-run</code> is not a contract; it’s an honour system. A badly written dep could still change your system even when you use <code>--dry-run</code>.</p>
-      
-      <p>Dep sources are shared using git, so you can rely on their immutability once you’ve checked the refs, like any git repo.</p>
-      
-      <h2 id="dep-locations">Dep Locations</h2>
-      
-      <p>There are three standard locations that babushka will search within to find deps.</p>
-      
-      <ul>
-        <li>
-          <p>The core deps that are bundled with babushka are found at <code>/usr/local/babushka/deps</code> (or within the <code>deps/</code> directory of your custom install path, if you used one). This is a fixed set of deps; they’re the bare minimum required to install babushka itself, along with its dependencies like git, and to check for system stuff like package managers. This source is called <code>core</code>.</p>
-        </li>
-        <li>
-          <p>You can put your own personal deps in <code>~/.babushka/deps</code>. Babushka will load that path as the a source called <code>personal</code>, so the deps within that directory will always be available. There’s no need to, but I recommend you make <code>~/.babushka/deps</code> a git repo. It’s a good idea to use git to manage your personal deps, and if you like, you can push them to github for others to use. (Mine are <a href="http://github.com/benhoskings/babushka-deps">here</a>.)</p>
-        </li>
-        <li>
-          <p>The <code>./babushka-deps/</code> directory, i.e. within the current directory, will also be loaded as a source, named <code>current dir</code>. This is a good place to put project-specific deps – whenever you’re in the project’s root directory (in the root of a rails project, for example), babushka will make the deps within <code>babushka-deps/</code> available.</p>
-        </li>
-      </ul>
-      
-      <p>Babushka will find deps in those locations by default. Other deps – ones published by other people, for example – are found in <a href="/dep-sources">dep sources</a>.</p>
-    </article>
-  </body>
+<head>
+<meta charset='utf-8'>
+<title>Finding deps - babushka</title>
+<link href='/styles/styles.css' media='screen' rel='stylesheet' type='text/css'>
+<meta content='pith 0.2.3' name='generator'>
+<meta content='width = 688' name='viewport'>
+<script>
+  if (navigator.userAgent.match(/MSIE/)) {
+    ie_version = navigator.userAgent.match(/MSIE (\d+)/)[1]
+    document.getElementsByTagName('html')[0].className = 'ie' + ie_version
+  }
+</script>
+<!--[if lte IE 8]>
+<script>
+  // html5shiv MIT @rem remysharp.com/html5-enabling-script
+  // iepp v1.6.2 MIT @jon_neal iecss.com/print-protector
+  /*@cc_on(function(m,c){var z="abbr|article|aside|audio|canvas|details|figcaption|figure|footer|header|hgroup|mark|meter|nav|output|progress|section|summary|time|video";function n(d){for(var a=-1;++a<o;)d.createElement(i[a])}function p(d,a){for(var e=-1,b=d.length,j,q=[];++e<b;){j=d[e];if((a=j.media||a)!="screen")q.push(p(j.imports,a),j.cssText)}return q.join("")}var g=c.createElement("div");g.innerHTML="<z>i</z>";if(g.childNodes.length!==1){var i=z.split("|"),o=i.length,s=RegExp("(^|\\s)("+z+")",
+  "gi"),t=RegExp("<(/*)("+z+")","gi"),u=RegExp("(^|[^\\n]*?\\s)("+z+")([^\\n]*)({[\\n\\w\\W]*?})","gi"),r=c.createDocumentFragment(),k=c.documentElement;g=k.firstChild;var h=c.createElement("body"),l=c.createElement("style"),f;n(c);n(r);g.insertBefore(l,
+  g.firstChild);l.media="print";m.attachEvent("onbeforeprint",function(){var d=-1,a=p(c.styleSheets,"all"),e=[],b;for(f=f||c.body;(b=u.exec(a))!=null;)e.push((b[1]+b[2]+b[3]).replace(s,"$1.iepp_$2")+b[4]);for(l.styleSheet.cssText=e.join("\n");++d<o;){a=c.getElementsByTagName(i[d]);e=a.length;for(b=-1;++b<e;)if(a[b].className.indexOf("iepp_")<0)a[b].className+=" iepp_"+i[d]}r.appendChild(f);k.appendChild(h);h.className=f.className;h.innerHTML=f.innerHTML.replace(t,"<$1font")});m.attachEvent("onafterprint",
+  function(){h.innerHTML="";k.removeChild(h);k.appendChild(f);l.styleSheet.cssText=""})}})(this,document);@*/
+</script>
+<![endif]-->
+</head>
+<body class='finding-deps'>
+<aside role='contentinfo'>
+<a class='ref' href='https://github.com/benhoskings/babushka.me/commit/c491905' rel='external'>c491905</a>
+</aside>
+<h1>
+<a href='/'>
+Babushka: test-driven sysadmin.
+</a>
+</h1>
+<section class='nav-wrapper'>
+<nav>
+<section class='doll'>
+<img alt='babushka logo' src='/images/babushka.png'>
+</section>
+<section>
+<h2>&nbsp;&nbsp;&nbsp;&nbsp;Hello</h2>
+<p>
+<a href='/overview'>Overview</a>
+<a href='/installing'>Installing</a>
+</p>
+</section>
+<section>
+<h2>Equipment</h2>
+<p>
+<a href='/running-babushka'>Running babushka</a>
+<a href='/finding-deps'>Finding deps</a>
+<a href='/dep-sources'>Dep sources</a>
+<a href='/running-deps'>Running deps</a>
+</p>
+</section>
+<section>
+<h2>Materials</h2>
+<p>
+<a href='/how-deps-work'>How deps work</a>
+<a href='/writing-deps'>Writing deps</a>
+<a href='/dep-examples'>Dep examples</a>
+</p>
+</section>
+<section class='links'>
+<h2>&nbsp;&nbsp;&nbsp;&nbsp;Links</h2>
+<p>
+<a href='http://github.com/benhoskings/babushka'>github</a>
+<a href='http://rubydoc.info/github/benhoskings/babushka/master/frames'>rdoc</a>
+<a href='http://groups.google.com/group/babushka_app/topics'>mailing list</a>
+</p>
+</section>
+</nav>
+</section>
+<article>
+<h1>Finding deps</h1>
+
+<p>You can <a href="https://github.com/search?q=babushka-deps">search on github</a> for deps you might like to use, using the term ‘babushka-deps’.</p>
+
+<h2 id="trust">Trust</h2>
+
+<p>Deps can run any ruby code. Since ruby can shell out, a dep can run any code at all. A maliciously written dep could add your machine to a botnet, or email your ssh key to a mobster, or anything crafty or untoward you can think of.</p>
+
+<p>(This is true of any code you run on your machine. If you run it, you’re trusting it.)</p>
+
+<p>Babushka has no security features at all. This is by design, because the only real type of security is a network of trust. Anything else is, <a href="http://www.youtube.com/watch?v=4XpnKHJAok8#t=27m36s">as Linus Torvalds said</a>, masturbation.</p>
+
+<p>The upshot: Only run deps written by people you trust to get them right, or deps whose code you’ve inspected beforehand.</p>
+
+<p>In particular, <code>--dry-run</code> is not a contract; it’s an honour system. A badly written dep could still change your system even when you use <code>--dry-run</code>.</p>
+
+<p>Dep sources are shared using git, so you can rely on their immutability once you’ve checked the refs, like any git repo.</p>
+
+<h2 id="dep-locations">Dep Locations</h2>
+
+<p>There are three standard locations that babushka will search within to find deps.</p>
+
+<ul>
+  <li>
+    <p>The core deps that are bundled with babushka are found at <code>/usr/local/babushka/deps</code> (or within the <code>deps/</code> directory of your custom install path, if you used one). This is a fixed set of deps; they’re the bare minimum required to install babushka itself, along with its dependencies like git, and to check for system stuff like package managers. This source is called <code>core</code>.</p>
+  </li>
+  <li>
+    <p>You can put your own personal deps in <code>~/.babushka/deps</code>. Babushka will load that path as the a source called <code>personal</code>, so the deps within that directory will always be available. There’s no need to, but I recommend you make <code>~/.babushka/deps</code> a git repo. It’s a good idea to use git to manage your personal deps, and if you like, you can push them to github for others to use. (Mine are <a href="http://github.com/benhoskings/babushka-deps">here</a>.)</p>
+  </li>
+  <li>
+    <p>The <code>./babushka-deps/</code> directory, i.e. within the current directory, will also be loaded as a source, named <code>current dir</code>. This is a good place to put project-specific deps – whenever you’re in the project’s root directory (in the root of a rails project, for example), babushka will make the deps within <code>babushka-deps/</code> available.</p>
+  </li>
+</ul>
+
+<p>Babushka will find deps in those locations by default. Other deps – ones published by other people, for example – are found in <a href="/dep-sources">dep sources</a>.</p>
+
+
+</article>
+</body>
 </html>

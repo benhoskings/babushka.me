@@ -1,132 +1,133 @@
 <!DOCTYPE html>
 <html lang='en'>
-  <head>
-    <meta charset='utf-8'>
-    <title>How deps work - babushka</title>
-    <link href='/styles/styles.css' media='screen' rel='stylesheet' type='text/css'>
-    <meta content='pith 0.2.3' name='generator'>
-    <meta content='width = 688' name='viewport'>
-    <script>
-      if (navigator.userAgent.match(/MSIE/)) {
-        ie_version = navigator.userAgent.match(/MSIE (\d+)/)[1]
-        document.getElementsByTagName('html')[0].className = 'ie' + ie_version
-      }
-    </script>
-    <!--[if lte IE 8]>
-      <script>
-        // html5shiv MIT @rem remysharp.com/html5-enabling-script
-        // iepp v1.6.2 MIT @jon_neal iecss.com/print-protector
-        /*@cc_on(function(m,c){var z="abbr|article|aside|audio|canvas|details|figcaption|figure|footer|header|hgroup|mark|meter|nav|output|progress|section|summary|time|video";function n(d){for(var a=-1;++a<o;)d.createElement(i[a])}function p(d,a){for(var e=-1,b=d.length,j,q=[];++e<b;){j=d[e];if((a=j.media||a)!="screen")q.push(p(j.imports,a),j.cssText)}return q.join("")}var g=c.createElement("div");g.innerHTML="<z>i</z>";if(g.childNodes.length!==1){var i=z.split("|"),o=i.length,s=RegExp("(^|\\s)("+z+")",
-        "gi"),t=RegExp("<(/*)("+z+")","gi"),u=RegExp("(^|[^\\n]*?\\s)("+z+")([^\\n]*)({[\\n\\w\\W]*?})","gi"),r=c.createDocumentFragment(),k=c.documentElement;g=k.firstChild;var h=c.createElement("body"),l=c.createElement("style"),f;n(c);n(r);g.insertBefore(l,
-        g.firstChild);l.media="print";m.attachEvent("onbeforeprint",function(){var d=-1,a=p(c.styleSheets,"all"),e=[],b;for(f=f||c.body;(b=u.exec(a))!=null;)e.push((b[1]+b[2]+b[3]).replace(s,"$1.iepp_$2")+b[4]);for(l.styleSheet.cssText=e.join("\n");++d<o;){a=c.getElementsByTagName(i[d]);e=a.length;for(b=-1;++b<e;)if(a[b].className.indexOf("iepp_")<0)a[b].className+=" iepp_"+i[d]}r.appendChild(f);k.appendChild(h);h.className=f.className;h.innerHTML=f.innerHTML.replace(t,"<$1font")});m.attachEvent("onafterprint",
-        function(){h.innerHTML="";k.removeChild(h);k.appendChild(f);l.styleSheet.cssText=""})}})(this,document);@*/
-      </script>
-    <![endif]-->
-  </head>
-  <body class='how-deps-work'>
-    <aside role='contentinfo'>
-      <a class='ref' href='https://github.com/benhoskings/babushka.me/commit/45f6c29' rel='external'>45f6c29</a>
-    </aside>
-    <h1>
-      <a href='/'>
-        Babushka: test-driven sysadmin.
-      </a>
-    </h1>
-    <section class='nav-wrapper'>
-      <nav>
-        <section class='doll'>
-          <img alt='babushka logo' src='/images/babushka.png'>
-        </section>
-        <section>
-          <h2>&nbsp;&nbsp;&nbsp;&nbsp;Hello</h2>
-          <p>
-            <a href='/overview'>Overview</a>
-            <a href='/installing'>Installing</a>
-          </p>
-        </section>
-        <section>
-          <h2>Equipment</h2>
-          <p>
-            <a href='/running-babushka'>Running babushka</a>
-            <a href='/finding-deps'>Finding deps</a>
-            <a href='/dep-sources'>Dep sources</a>
-            <a href='/running-deps'>Running deps</a>
-          </p>
-        </section>
-        <section>
-          <h2>Materials</h2>
-          <p>
-            <a href='/how-deps-work'>How deps work</a>
-            <a href='/writing-deps'>Writing deps</a>
-            <a href='/dep-examples'>Dep examples</a>
-          </p>
-        </section>
-        <section class='links'>
-          <h2>&nbsp;&nbsp;&nbsp;&nbsp;Links</h2>
-          <p>
-            <a href='http://github.com/benhoskings/babushka'>github</a>
-            <a href='http://rubydoc.info/github/benhoskings/babushka/master/frames'>rdoc</a>
-            <a href='http://groups.google.com/group/babushka_app/topics'>mailing list</a>
-          </p>
-        </section>
-      </nav>
-    </section>
-    <article>
-      <h1>How deps work</h1>
-      <p>Dep is short for dependency &#8211; one single piece of a larger task. A little nugget of code that does just one thing, and does it right.</p>
-      
-      <p>Deps hook together by requiring each other. When you run babushka you specify a dep as an entry point, and babushka processes it and its requirements as a tree.</p>
-      
-      <h2 id="in-code">In code</h2>
-      
-      <p>Here&#8217;s a babushka dep, at its most generic.</p>
-      <pre><code class='ruby'><span class="CodeRay">dep <span class="string"><span class="delimiter">'</span><span class="content">name</span><span class="delimiter">'</span></span>, <span class="symbol">:argument</span> <span class="keyword">do</span>&#x000A;  requires <span class="string"><span class="delimiter">'</span><span class="content">other deps</span><span class="delimiter">'</span></span>.with(<span class="string"><span class="delimiter">'</span><span class="content">args</span><span class="delimiter">'</span></span>), <span class="string"><span class="delimiter">'</span><span class="content">whatever they might be</span><span class="delimiter">'</span></span>&#x000A;  met? {&#x000A;    <span class="comment"># is this dependency already met?</span>&#x000A;  }&#x000A;  meet {&#x000A;    <span class="comment"># this code gets run if it isn't.</span>&#x000A;  }&#x000A;<span class="keyword">end</span></span></code></pre>
-      <p><code>met?</code> should be an idempotent block of code that returns true if the dep is &#8220;met&#8221; &#8211; that is, if its job is already done.</p>
-      
-      <p><code>meet</code> shouldn&#8217;t check anything at all: it should do the dep&#8217;s job unconditionally. Its return value is ignored.</p>
-      
-      <p>The interaction between <code>met?</code> and <code>meet</code> defines babushka.</p>
-      
-      <h2 id="met--meet--met">met? / meet / met?</h2>
-      
-      <p>When a dep is run, its <code>met?</code> block is called. If it returns true, then the dep&#8217;s job is done.</p>
-      
-      <p>If it&#8217;s unmet, though, then <code>meet</code> is run (and its return value ignored), and then <code>met?</code> is run again to see if running meet caused the dep to become met.</p>
-      
-      <p>The idea is that <code>met?</code> and <code>meet</code> are complementary: <code>met?</code>&#8217;s job is checking whether <code>meet</code> has done its job properly.</p>
-      
-      <p>I like to think of an unmet dep&#8217;s <code>met?</code> block as a failing test, and <code>meet</code> as the code that makes that test pass.</p>
-      
-      <p>Take <a href="https://github.com/benhoskings/babushka/blob/master/deps/rubygems.rb">the rubygems dep</a> as an example:</p>
-      
-      <ul>
-        <li>The <code>met?</code> check confirms <code>gem</code> is in the path and its version is recent enough.</li>
-        <li>The <code>meet</code> block unconditionally downloads and installs rubygems.</li>
-      </ul>
-      
-      <p>Things like rubygems aren&#8217;t hard to install on their own, but with babushka it&#8217;s fast and predictable: the job is done just right, every time.</p>
-      
-      <h2 id="what-not-how">What, not how</h2>
-      
-      <p>This implies an important part of the design: the <code>met?</code> block shouldn&#8217;t just directly check that <code>meet</code> did a piece of work; that would be trivial repetition. Instead, A good test checks the <em>result</em> of the work. For example:</p>
-      
-      <ul>
-        <li>If <code>meet</code> starts the webserver, then <code>met?</code> should check there&#8217;s something listening on port 80.</li>
-        <li>If <code>meet</code> bundles your app, then <code>met?</code> should run <code>bundle --check</code>.</li>
-        <li>If <code>meet</code> exports a variable in your shell config, then <code>met?</code> should fork a shell and check it&#8217;s set.</li>
-      </ul>
-      
-      <p>In short, <code>met?</code> should check <code>meet</code>&#8217;s intent, not its implementation: it should check the what, not the how.</p>
-      
-      <h2 id="requirements">Requirements</h2>
-      
-      <p>Another point to note is that when you&#8217;re writing a dep, you shouldn&#8217;t have to think very much outside it &#8211; the dep should be context-free, much like a function should encapsulate a piece of logic without regard for the context in which it&#8217;s called.</p>
-      
-      <p>As long as the correct requirements are specified, babushka will sort out the context for you, and you can write each dep independently, passing the required arguments around.</p>
-      
-      <p>For example, a dep assigning database permissions requires an existing database, and so should require a dep that checks for it, creating it if necessary.</p>
-      <pre><code class='ruby'><span class="CodeRay">dep <span class="string"><span class="delimiter">'</span><span class="content">db access</span><span class="delimiter">'</span></span>, <span class="symbol">:db_name</span> <span class="keyword">do</span>&#x000A;  requires <span class="string"><span class="delimiter">'</span><span class="content">db exists</span><span class="delimiter">'</span></span>.with(db_name)&#x000A;  met? {&#x000A;    <span class="comment"># Check if we can read something from the database</span>&#x000A;  }&#x000A;  meet {&#x000A;    <span class="comment"># Assign the correct permissions to the database</span>&#x000A;  }&#x000A;<span class="keyword">end</span></span></code></pre>
-      <p>With that requirement, the met? and meet logic in &#8216;db exists&#8217; can just assume that the database already exists. We don&#8217;t need any &#8220;if db_exists&#8221; conditionals in this dep: that&#8217;s not relevant in this context, thanks to the requirement. There&#8217;s some more on context in the section on <a href="/writing-deps">writing deps</a>.</p>
-    </article>
-  </body>
+<head>
+<meta charset='utf-8'>
+<title>How deps work - babushka</title>
+<link href='/styles/styles.css' media='screen' rel='stylesheet' type='text/css'>
+<meta content='pith 0.2.3' name='generator'>
+<meta content='width = 688' name='viewport'>
+<script>
+  if (navigator.userAgent.match(/MSIE/)) {
+    ie_version = navigator.userAgent.match(/MSIE (\d+)/)[1]
+    document.getElementsByTagName('html')[0].className = 'ie' + ie_version
+  }
+</script>
+<!--[if lte IE 8]>
+<script>
+  // html5shiv MIT @rem remysharp.com/html5-enabling-script
+  // iepp v1.6.2 MIT @jon_neal iecss.com/print-protector
+  /*@cc_on(function(m,c){var z="abbr|article|aside|audio|canvas|details|figcaption|figure|footer|header|hgroup|mark|meter|nav|output|progress|section|summary|time|video";function n(d){for(var a=-1;++a<o;)d.createElement(i[a])}function p(d,a){for(var e=-1,b=d.length,j,q=[];++e<b;){j=d[e];if((a=j.media||a)!="screen")q.push(p(j.imports,a),j.cssText)}return q.join("")}var g=c.createElement("div");g.innerHTML="<z>i</z>";if(g.childNodes.length!==1){var i=z.split("|"),o=i.length,s=RegExp("(^|\\s)("+z+")",
+  "gi"),t=RegExp("<(/*)("+z+")","gi"),u=RegExp("(^|[^\\n]*?\\s)("+z+")([^\\n]*)({[\\n\\w\\W]*?})","gi"),r=c.createDocumentFragment(),k=c.documentElement;g=k.firstChild;var h=c.createElement("body"),l=c.createElement("style"),f;n(c);n(r);g.insertBefore(l,
+  g.firstChild);l.media="print";m.attachEvent("onbeforeprint",function(){var d=-1,a=p(c.styleSheets,"all"),e=[],b;for(f=f||c.body;(b=u.exec(a))!=null;)e.push((b[1]+b[2]+b[3]).replace(s,"$1.iepp_$2")+b[4]);for(l.styleSheet.cssText=e.join("\n");++d<o;){a=c.getElementsByTagName(i[d]);e=a.length;for(b=-1;++b<e;)if(a[b].className.indexOf("iepp_")<0)a[b].className+=" iepp_"+i[d]}r.appendChild(f);k.appendChild(h);h.className=f.className;h.innerHTML=f.innerHTML.replace(t,"<$1font")});m.attachEvent("onafterprint",
+  function(){h.innerHTML="";k.removeChild(h);k.appendChild(f);l.styleSheet.cssText=""})}})(this,document);@*/
+</script>
+<![endif]-->
+</head>
+<body class='how-deps-work'>
+<aside role='contentinfo'>
+<a class='ref' href='https://github.com/benhoskings/babushka.me/commit/c491905' rel='external'>c491905</a>
+</aside>
+<h1>
+<a href='/'>
+Babushka: test-driven sysadmin.
+</a>
+</h1>
+<section class='nav-wrapper'>
+<nav>
+<section class='doll'>
+<img alt='babushka logo' src='/images/babushka.png'>
+</section>
+<section>
+<h2>&nbsp;&nbsp;&nbsp;&nbsp;Hello</h2>
+<p>
+<a href='/overview'>Overview</a>
+<a href='/installing'>Installing</a>
+</p>
+</section>
+<section>
+<h2>Equipment</h2>
+<p>
+<a href='/running-babushka'>Running babushka</a>
+<a href='/finding-deps'>Finding deps</a>
+<a href='/dep-sources'>Dep sources</a>
+<a href='/running-deps'>Running deps</a>
+</p>
+</section>
+<section>
+<h2>Materials</h2>
+<p>
+<a href='/how-deps-work'>How deps work</a>
+<a href='/writing-deps'>Writing deps</a>
+<a href='/dep-examples'>Dep examples</a>
+</p>
+</section>
+<section class='links'>
+<h2>&nbsp;&nbsp;&nbsp;&nbsp;Links</h2>
+<p>
+<a href='http://github.com/benhoskings/babushka'>github</a>
+<a href='http://rubydoc.info/github/benhoskings/babushka/master/frames'>rdoc</a>
+<a href='http://groups.google.com/group/babushka_app/topics'>mailing list</a>
+</p>
+</section>
+</nav>
+</section>
+<article>
+<h1>How deps work</h1>
+<p>Dep is short for dependency &#8211; one single piece of a larger task. A little nugget of code that does just one thing, and does it right.</p>
+
+<p>Deps hook together by requiring each other. When you run babushka you specify a dep as an entry point, and babushka processes it and its requirements as a tree.</p>
+
+<h2 id="in-code">In code</h2>
+
+<p>Here&#8217;s a babushka dep, at its most generic.</p>
+<pre><code class='ruby'><span class="CodeRay">dep <span class="string"><span class="delimiter">'</span><span class="content">name</span><span class="delimiter">'</span></span>, <span class="symbol">:argument</span> <span class="keyword">do</span>&#x000A;  requires <span class="string"><span class="delimiter">'</span><span class="content">other deps</span><span class="delimiter">'</span></span>.with(<span class="string"><span class="delimiter">'</span><span class="content">args</span><span class="delimiter">'</span></span>), <span class="string"><span class="delimiter">'</span><span class="content">whatever they might be</span><span class="delimiter">'</span></span>&#x000A;  met? {&#x000A;    <span class="comment"># is this dependency already met?</span>&#x000A;  }&#x000A;  meet {&#x000A;    <span class="comment"># this code gets run if it isn't.</span>&#x000A;  }&#x000A;<span class="keyword">end</span></span></code></pre>
+<p><code>met?</code> should be an idempotent block of code that returns true if the dep is &#8220;met&#8221; &#8211; that is, if its job is already done.</p>
+
+<p><code>meet</code> shouldn&#8217;t check anything at all: it should do the dep&#8217;s job unconditionally. Its return value is ignored.</p>
+
+<p>The interaction between <code>met?</code> and <code>meet</code> defines babushka.</p>
+
+<h2 id="met--meet--met">met? / meet / met?</h2>
+
+<p>When a dep is run, its <code>met?</code> block is called. If it returns true, then the dep&#8217;s job is done.</p>
+
+<p>If it&#8217;s unmet, though, then <code>meet</code> is run (and its return value ignored), and then <code>met?</code> is run again to see if running meet caused the dep to become met.</p>
+
+<p>The idea is that <code>met?</code> and <code>meet</code> are complementary: <code>met?</code>&#8217;s job is checking whether <code>meet</code> has done its job properly.</p>
+
+<p>I like to think of an unmet dep&#8217;s <code>met?</code> block as a failing test, and <code>meet</code> as the code that makes that test pass.</p>
+
+<p>Take <a href="https://github.com/benhoskings/babushka/blob/master/deps/rubygems.rb">the rubygems dep</a> as an example:</p>
+
+<ul>
+  <li>The <code>met?</code> check confirms <code>gem</code> is in the path and its version is recent enough.</li>
+  <li>The <code>meet</code> block unconditionally downloads and installs rubygems.</li>
+</ul>
+
+<p>Things like rubygems aren&#8217;t hard to install on their own, but with babushka it&#8217;s fast and predictable: the job is done just right, every time.</p>
+
+<h2 id="what-not-how">What, not how</h2>
+
+<p>This implies an important part of the design: the <code>met?</code> block shouldn&#8217;t just directly check that <code>meet</code> did a piece of work; that would be trivial repetition. Instead, A good test checks the <em>result</em> of the work. For example:</p>
+
+<ul>
+  <li>If <code>meet</code> starts the webserver, then <code>met?</code> should check there&#8217;s something listening on port 80.</li>
+  <li>If <code>meet</code> bundles your app, then <code>met?</code> should run <code>bundle --check</code>.</li>
+  <li>If <code>meet</code> exports a variable in your shell config, then <code>met?</code> should fork a shell and check it&#8217;s set.</li>
+</ul>
+
+<p>In short, <code>met?</code> should check <code>meet</code>&#8217;s intent, not its implementation: it should check the what, not the how.</p>
+
+<h2 id="requirements">Requirements</h2>
+
+<p>Another point to note is that when you&#8217;re writing a dep, you shouldn&#8217;t have to think very much outside it &#8211; the dep should be context-free, much like a function should encapsulate a piece of logic without regard for the context in which it&#8217;s called.</p>
+
+<p>As long as the correct requirements are specified, babushka will sort out the context for you, and you can write each dep independently, passing the required arguments around.</p>
+
+<p>For example, a dep assigning database permissions requires an existing database, and so should require a dep that checks for it, creating it if necessary.</p>
+<pre><code class='ruby'><span class="CodeRay">dep <span class="string"><span class="delimiter">'</span><span class="content">db access</span><span class="delimiter">'</span></span>, <span class="symbol">:db_name</span> <span class="keyword">do</span>&#x000A;  requires <span class="string"><span class="delimiter">'</span><span class="content">db exists</span><span class="delimiter">'</span></span>.with(db_name)&#x000A;  met? {&#x000A;    <span class="comment"># Check if we can read something from the database</span>&#x000A;  }&#x000A;  meet {&#x000A;    <span class="comment"># Assign the correct permissions to the database</span>&#x000A;  }&#x000A;<span class="keyword">end</span></span></code></pre>
+<p>With that requirement, the met? and meet logic in &#8216;db exists&#8217; can just assume that the database already exists. We don&#8217;t need any &#8220;if db_exists&#8221; conditionals in this dep: that&#8217;s not relevant in this context, thanks to the requirement. There&#8217;s some more on context in the section on <a href="/writing-deps">writing deps</a>.</p>
+
+</article>
+</body>
 </html>
