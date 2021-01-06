@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang='en'>
+  <head>
+    <meta charset='utf-8'>
+    <title>Writing deps - babushka</title>
+    <link href='/styles/styles.css' media='screen' rel='stylesheet' type='text/css'>
+    <meta content='pith 0.2.3' name='generator'>
+    <meta content='width = 688' name='viewport'>
+    <script>
+      if (navigator.userAgent.match(/MSIE/)) {
+        ie_version = navigator.userAgent.match(/MSIE (\d+)/)[1]
+        document.getElementsByTagName('html')[0].className = 'ie' + ie_version
+      }
+    </script>
+    <!--[if lte IE 8]>
+      <script>
+        // html5shiv MIT @rem remysharp.com/html5-enabling-script
+        // iepp v1.6.2 MIT @jon_neal iecss.com/print-protector
+        /*@cc_on(function(m,c){var z="abbr|article|aside|audio|canvas|details|figcaption|figure|footer|header|hgroup|mark|meter|nav|output|progress|section|summary|time|video";function n(d){for(var a=-1;++a<o;)d.createElement(i[a])}function p(d,a){for(var e=-1,b=d.length,j,q=[];++e<b;){j=d[e];if((a=j.media||a)!="screen")q.push(p(j.imports,a),j.cssText)}return q.join("")}var g=c.createElement("div");g.innerHTML="<z>i</z>";if(g.childNodes.length!==1){var i=z.split("|"),o=i.length,s=RegExp("(^|\\s)("+z+")",
+        "gi"),t=RegExp("<(/*)("+z+")","gi"),u=RegExp("(^|[^\\n]*?\\s)("+z+")([^\\n]*)({[\\n\\w\\W]*?})","gi"),r=c.createDocumentFragment(),k=c.documentElement;g=k.firstChild;var h=c.createElement("body"),l=c.createElement("style"),f;n(c);n(r);g.insertBefore(l,
+        g.firstChild);l.media="print";m.attachEvent("onbeforeprint",function(){var d=-1,a=p(c.styleSheets,"all"),e=[],b;for(f=f||c.body;(b=u.exec(a))!=null;)e.push((b[1]+b[2]+b[3]).replace(s,"$1.iepp_$2")+b[4]);for(l.styleSheet.cssText=e.join("\n");++d<o;){a=c.getElementsByTagName(i[d]);e=a.length;for(b=-1;++b<e;)if(a[b].className.indexOf("iepp_")<0)a[b].className+=" iepp_"+i[d]}r.appendChild(f);k.appendChild(h);h.className=f.className;h.innerHTML=f.innerHTML.replace(t,"<$1font")});m.attachEvent("onafterprint",
+        function(){h.innerHTML="";k.removeChild(h);k.appendChild(f);l.styleSheet.cssText=""})}})(this,document);@*/
+      </script>
+    <![endif]-->
+  </head>
+  <body class='writing-deps'>
+    <aside role='contentinfo'>
+      <a class='ref' href='https://github.com/benhoskings/babushka.me/commit/45f6c29' rel='external'>45f6c29</a>
+    </aside>
+    <h1>
+      <a href='/'>
+        Babushka: test-driven sysadmin.
+      </a>
+    </h1>
+    <section class='nav-wrapper'>
+      <nav>
+        <section class='doll'>
+          <img alt='babushka logo' src='/images/babushka.png'>
+        </section>
+        <section>
+          <h2>&nbsp;&nbsp;&nbsp;&nbsp;Hello</h2>
+          <p>
+            <a href='/overview'>Overview</a>
+            <a href='/installing'>Installing</a>
+          </p>
+        </section>
+        <section>
+          <h2>Equipment</h2>
+          <p>
+            <a href='/running-babushka'>Running babushka</a>
+            <a href='/finding-deps'>Finding deps</a>
+            <a href='/dep-sources'>Dep sources</a>
+            <a href='/running-deps'>Running deps</a>
+          </p>
+        </section>
+        <section>
+          <h2>Materials</h2>
+          <p>
+            <a href='/how-deps-work'>How deps work</a>
+            <a href='/writing-deps'>Writing deps</a>
+            <a href='/dep-examples'>Dep examples</a>
+          </p>
+        </section>
+        <section class='links'>
+          <h2>&nbsp;&nbsp;&nbsp;&nbsp;Links</h2>
+          <p>
+            <a href='http://github.com/benhoskings/babushka'>github</a>
+            <a href='http://rubydoc.info/github/benhoskings/babushka/master/frames'>rdoc</a>
+            <a href='http://groups.google.com/group/babushka_app/topics'>mailing list</a>
+          </p>
+        </section>
+      </nav>
+    </section>
+    <article>
+      <h1>Writing deps</h1>
+      <p>It&#8217;s all very well to run <code>babushka blah</code> and have it do jobs for you, but the real power is in babushka&#8217;s ability to automate whatever chore you want, not just ones that others have thought of already.</p>
+      
+      <h2 id="context-or-lack-of-it">Context (or lack of it)</h2>
+      
+      <p>When you&#8217;re writing a dep, you don&#8217;t have to think about context at all, just one little task in isolation. As long as your <code>requires</code> are correct, you can leave the overall structure to babushka and just write each little dep separately.</p>
+      
+      <p>When you invoke the dep, babushka uses the <code>requires</code> in each dep to assemble a tree of deps and achieve the end goal you&#8217;re after.</p>
+      
+      <p>The other reason to ignore context when writing each dep is that context is coupling. Keeping deps decoupled means they can be more easily re-used in different situations, where the context is probably different.</p>
+      
+      <h2 id="writing-met-and-meet">Writing <code>met?</code> and <code>meet</code></h2>
+      
+      <p>The section on <a href="/dep-sources">how deps work</a> explains the structure of a dep. To see how each section works, let&#8217;s build a simple dep to symlink a directory. <em>Code on the left, shell output on the right.</em></p>
+      
+            <figure class="precaption code">
+              <pre><code class='ruby'><span class="CodeRay">dep <span class="string"><span class="delimiter">'</span><span class="content">work symlinked</span><span class="delimiter">'</span></span></span></code></pre>
+              <figcaption>
+                <pre><code>$ babushka ‘work symlinked’&#x000A;work symlinked {&#x000A;} ✓ work symlinked&#x000A;$&#x000A;</code></pre>
+              </figcaption>
+            </figure>
+      <p>That&#8217;s the simplest dep there is: you don&#8217;t need to supply a dep block if you have nothing to put in it. Since the <code>met?</code> and <code>meet</code> blocks both default to being empty, though, it&#8217;s not very useful.</p>
+      
+      <p><em>An empty <code>met?</code> block defaults to true (so that deps that do nothing but require other deps act as passthroughs).</em></p>
+      
+      <p>Let&#8217;s add a <code>met?</code> block with a simple check.</p>
+      
+            <figure class="precaption code">
+              <pre><code class='ruby'><span class="CodeRay">dep <span class="string"><span class="delimiter">'</span><span class="content">work symlinked</span><span class="delimiter">'</span></span> <span class="keyword">do</span>&#x000A;  met? {&#x000A;    <span class="comment"># The String#p patch expands the string</span>&#x000A;    <span class="comment"># and returns a Fancypath, which has lots</span>&#x000A;    <span class="comment"># of useful helpers.</span>&#x000A;    <span class="string"><span class="delimiter">&quot;</span><span class="content">~/work</span><span class="delimiter">&quot;</span></span>.p.exists?&#x000A;  }&#x000A;<span class="keyword">end</span></span></code></pre>
+              <figcaption>
+                <pre><code>$ babushka ‘work symlinked’&#x000A;work symlinked {&#x000A;  meet {&#x000A;  }&#x000A;} ✗ work symlinked&#x000A;$&#x000A;</code></pre>
+              </figcaption>
+            </figure>
+      <p>This time, the logic we put in the <code>met?</code> block returned false (because <code>~/work</code> didn&#8217;t exist). To see when that block is being run, let&#8217;s add some logging:</p>
+      
+            <figure class="precaption code">
+              <pre><code class='ruby'><span class="CodeRay">dep <span class="string"><span class="delimiter">'</span><span class="content">work symlinked</span><span class="delimiter">'</span></span> <span class="keyword">do</span>&#x000A;  met? {&#x000A;    <span class="string"><span class="delimiter">&quot;</span><span class="content">~/work</span><span class="delimiter">&quot;</span></span>.p.exists?.tap {|result|&#x000A;      log <span class="string"><span class="delimiter">&quot;</span><span class="content">met?: </span><span class="inline"><span class="inline-delimiter">#{</span>result<span class="inline-delimiter">}</span></span><span class="content">.</span><span class="delimiter">&quot;</span></span>&#x000A;    }&#x000A;  }&#x000A;<span class="keyword">end</span></span></code></pre>
+              <figcaption>
+                <pre><code>$ babushka ‘work symlinked’&#x000A;work symlinked {&#x000A;  met?: false.&#x000A;  meet {&#x000A;  }&#x000A;  met?: false.&#x000A;} ✗ work symlinked&#x000A;$&#x000A;</code></pre>
+              </figcaption>
+            </figure>
+      <p>This shows that babushka is running the <code>met?</code> block twice: first to check, and then again after running <code>meet</code> (which is empty in this case). This is where <code>meet</code> comes in: it&#8217;s a piece of logic that, when run, should make <code>met?</code> return true.</p>
+      
+      <p>Let&#8217;s fill in the <code>meet</code> block to complete the dep.</p>
+      
+            <figure class="precaption code">
+              <pre><code class='ruby'><span class="CodeRay">dep <span class="string"><span class="delimiter">'</span><span class="content">work symlinked</span><span class="delimiter">'</span></span> <span class="keyword">do</span>&#x000A;  met? {&#x000A;    <span class="string"><span class="delimiter">&quot;</span><span class="content">~/work</span><span class="delimiter">&quot;</span></span>.p.exists?.tap {|result|&#x000A;      log <span class="string"><span class="delimiter">&quot;</span><span class="content">met?: </span><span class="inline"><span class="inline-delimiter">#{</span>result<span class="inline-delimiter">}</span></span><span class="content">.</span><span class="delimiter">&quot;</span></span>&#x000A;    }&#x000A;  }&#x000A;  meet {&#x000A;    shell <span class="string"><span class="delimiter">&quot;</span><span class="content">ln -s ~/jobs/acme ~/work</span><span class="delimiter">&quot;</span></span>&#x000A;    log <span class="string"><span class="delimiter">&quot;</span><span class="content">made the symlink.</span><span class="delimiter">&quot;</span></span>&#x000A;  }&#x000A;<span class="keyword">end</span></span></code></pre>
+              <figcaption>
+                <pre><code>$ babushka ‘work symlinked’&#x000A;work symlinked {&#x000A;  met?: false.&#x000A;  meet {&#x000A;    made the symlink.&#x000A;  }&#x000A;  met?: true.&#x000A;} ✓ work symlinked&#x000A;$&#x000A;</code></pre>
+              </figcaption>
+            </figure>
+      <p>This is how deps work (detailed <a href="/how-deps-work">here</a>): it&#8217;s the work <code>meet</code> did on the system, not its return value, that matters. Once <code>meet</code> runs, the <code>met?</code> check is passing, and we&#8217;re done. Without the logging, the final version of our dep looks like this:</p>
+      
+            <figure class="precaption code">
+              <pre><code class='ruby'><span class="CodeRay">dep <span class="string"><span class="delimiter">'</span><span class="content">work symlinked</span><span class="delimiter">'</span></span> <span class="keyword">do</span>&#x000A;  met? {&#x000A;    <span class="string"><span class="delimiter">&quot;</span><span class="content">~/work</span><span class="delimiter">&quot;</span></span>.p.exists?&#x000A;  }&#x000A;  meet {&#x000A;    shell <span class="string"><span class="delimiter">&quot;</span><span class="content">ln -s ~/jobs/acme ~/work</span><span class="delimiter">&quot;</span></span>&#x000A;  }&#x000A;<span class="keyword">end</span></span></code></pre>
+              <figcaption>
+                <pre><code>$ babushka ‘work symlinked’&#x000A;work symlinked {&#x000A;  meet {&#x000A;  }&#x000A;} ✓ work symlinked&#x000A;$&#x000A;</code></pre>
+              </figcaption>
+            </figure>
+      <p>Note the clean split between met? and meet: <code>met?</code> checks, and <code>meet</code> acts. If you find you’re checking for the presence of some condition in your <code>meet</code> block, it probably means you’re trying to do too much in a single dep, and you should be splitting it up into smaller ones. Remember, deps are small, self-contained and context-free - the more focused, the better.</p>
+      
+      <h2 id="requirements">Requirements</h2>
+      
+      <p>The next step in defining a larger task is to take the deps, each one a little nugget of functionality, and relate them to each other. Along with <code>met?</code> and <code>meet</code>, there’s a third keyword that’s core to the babushka DSL, and that’s <code>requires</code>. Unlike met? and meet, which accept a block, <code>requires</code> accepts a list, each item of which names another dep that this one directly depends on.</p>
+      
+      <p>This allows us to assemble deps into a tree of dependencies, while still ignoring most of the context (see above): from the point of view of any one dep, all we have to worry about are its direct requirements. The shape of the dependency tree is implied by those requirements, and is lazily assembled by babushka as it runs the deps.</p>
+      
+      <p>There’s no restrictions on what you can require from where: any dep can require any number of other deps. It’s also fine for a given dep to be required from many others – a given dep will only be invoked once per run. Each subsequent time a requirement pulls it in, the cached result of the first run is used.</p>
+      
+      <p>In fact, many core deps do this extensively. For example, deps defined against a package manager template all require a dep for the package manager itself (e.g. ‘bundler.gem’, and so on, all require ‘rubygems’). If we have a dep pulling in some libraries our project requires, then on OS X, only the first one will cause the ‘homebrew’ dep to be invoked; subsequent deps use the cached value:</p>
+      
+      <pre><code>$ babushka 'project libs'&#x000A;project libs {&#x000A;  curl.lib {&#x000A;    homebrew {&#x000A;      binary.homebrew {&#x000A;        repo.homebrew {&#x000A;        } ✓ repo.homebrew&#x000A;        'brew' runs from /usr/local/bin.&#x000A;      } ✓ binary.homebrew&#x000A;      build tools {&#x000A;        xcode tools {&#x000A;          'cc', 'gcc', 'c++', 'g++', 'llvm-gcc', 'llvm-g++', 'clang', 'make', 'ld' &amp; 'libtool' run from /usr/bin.&#x000A;        } ✓ xcode tools&#x000A;      } ✓ build tools&#x000A;    } ✓ homebrew&#x000A;  } ✓ curl.lib&#x000A;  png.lib {&#x000A;    ✓ homebrew (cached)&#x000A;    ✓ system has libpng-1.5.13 brew&#x000A;  } ✓ png.lib&#x000A;  yaml.lib {&#x000A;    ✓ homebrew (cached)&#x000A;    ✓ system has libyaml-0.1.4 brew&#x000A;  } ✓ yaml.lib&#x000A;} ✓ project libs&#x000A;</code></pre>
+      
+      <p>The only invalid case is a dependency loop, e.g. a -&gt; b -&gt; c -&gt; a. Babushka detects these, by maintaining a dep callstack and checking that each dep it’s about to run isn’t already in the stack. If a loop is detected, babushka will fail with a descriptive message.</p>
+      
+      <p>In sum, there’s no need to worry about the resulting graph, or run order, or anything like that: just specify each dep’s immediate requirements, and it’ll all come out in the wash.</p>
+      
+      <h2 id="dep-parameters">Dep parameters</h2>
+      
+      <p>As discussed in the section on <a href="/running-deps">running deps</a>, it’s nice to think of deps as similar to a method: they wrap up a bit of logic, separating it from the context it’s subsequently used in. In order to truly use and re-use a method, though, it needs to be parameterised: there’s not much point to wrapping logic in a method if we have to repeat it each time the inputs change. So just as a method has parameters, so do deps.</p>
+      
+      <p>Deps haven’t always had parameters: originally, babushka had a rather unsavoury system of globally shared variables, that at one point even involved <code>method_missing</code> (we were all young once). Parameters were introduced in Sep 2011, and all that global nonsense is gone now; <a href="https://github.com/benhoskings/babushka/commit/40054c2e7b9c382ff01ea26b70725a3271ac3eda">the relevant version bump</a> has more details on the redesign.</p>
+      
+      <p>Parameters are added to a dep by naming them as symbols following its name.</p>
+      <pre><code class='ruby'><span class="CodeRay">dep <span class="string"><span class="delimiter">'</span><span class="content">git</span><span class="delimiter">'</span></span>, <span class="symbol">:version</span> <span class="keyword">do</span>&#x000A;  <span class="comment"># ...</span>&#x000A;<span class="keyword">end</span></span></code></pre>
+      <p>That defines a &#8216;version&#8217; parameter, which allows us to supply an argument like this:</p>
+      <pre><code class='ruby'><span class="CodeRay">dep <span class="string"><span class="delimiter">'</span><span class="content">a gittish task</span><span class="delimiter">'</span></span> <span class="keyword">do</span>&#x000A;  requires <span class="string"><span class="delimiter">'</span><span class="content">git</span><span class="delimiter">'</span></span>.with(<span class="key">version</span>: <span class="string"><span class="delimiter">'</span><span class="content">1.8.0</span><span class="delimiter">'</span></span>)&#x000A;<span class="keyword">end</span></span></code></pre>
+      <p>As well as passing named arguments in a hash, you can pass them positionally. When passing by name, you can supply as many or as few as you like; when passing positionally, you have to supply them all (the arity has to match).</p>
+      <pre><code class='ruby'><span class="CodeRay">dep <span class="string"><span class="delimiter">'</span><span class="content">file linked</span><span class="delimiter">'</span></span>, <span class="symbol">:src</span>, <span class="symbol">:target</span> <span class="keyword">do</span>&#x000A;  <span class="comment"># ...</span>&#x000A;<span class="keyword">end</span>&#x000A;&#x000A;dep <span class="string"><span class="delimiter">'</span><span class="content">babushka linked</span><span class="delimiter">'</span></span> <span class="keyword">do</span>&#x000A;  requires <span class="string"><span class="delimiter">'</span><span class="content">file linked</span><span class="delimiter">'</span></span>.with(<span class="string"><span class="delimiter">'</span><span class="content">./bin/babushka.rb</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">~/bin/babushka</span><span class="delimiter">'</span></span>)&#x000A;<span class="keyword">end</span></span></code></pre>
+      <p>Arguments can also be supplied on the commandline when invoking a parameterised dep directly; see <a href="/running-deps">running deps</a>.</p>
+      
+      <p>Parameters are always optional, and lazy. It&#8217;s not until a parameter&#8217;s value is requested that it&#8217;s resolved; if it doesn&#8217;t have a value at that point, then babushka will prompt for it. (If <code>--defaults</code> was used, then the run will fail on an unset parameter.)</p>
+      
+      <p>Parameters can have default values, which are suggested when prompting and selectable by hitting &#8216;enter&#8217;:</p>
+      <pre><code class='ruby'><span class="CodeRay">dep <span class="string"><span class="delimiter">'</span><span class="content">postgres</span><span class="delimiter">'</span></span>, <span class="symbol">:version</span> <span class="keyword">do</span>&#x000A;  version.default(<span class="string"><span class="delimiter">'</span><span class="content">9.2.4</span><span class="delimiter">'</span></span>)&#x000A;<span class="keyword">end</span></span></code></pre>
+      <p>They also support silent defaults (&#8220;bang defaults&#8221;), that are used without prompting whenever a value wasn&#8217;t supplied:</p>
+      <pre><code class='ruby'><span class="CodeRay">dep <span class="string"><span class="delimiter">'</span><span class="content">nginx.src</span><span class="delimiter">'</span></span>, <span class="symbol">:prefix</span> <span class="keyword">do</span>&#x000A;  prefix.default!(<span class="string"><span class="delimiter">'</span><span class="content">/opt/nginx</span><span class="delimiter">'</span></span>)&#x000A;<span class="keyword">end</span></span></code></pre>
+      <p>The prompt message can be customised (all these settings can be chained):</p>
+      <pre><code class='ruby'><span class="CodeRay">dep <span class="string"><span class="delimiter">'</span><span class="content">nginx.src</span><span class="delimiter">'</span></span>, <span class="symbol">:prefix</span> <span class="keyword">do</span>&#x000A;  prefix.ask(<span class="string"><span class="delimiter">&quot;</span><span class="content">Where should nginx be installed?</span><span class="delimiter">&quot;</span></span>).default(<span class="string"><span class="delimiter">'</span><span class="content">/opt/nginx</span><span class="delimiter">'</span></span>)&#x000A;<span class="keyword">end</span></span></code></pre>
+      <p>And choices accepted when prompting can be restricted:</p>
+      <pre><code class='ruby'><span class="CodeRay">dep <span class="string"><span class="delimiter">'</span><span class="content">vhost configured</span><span class="delimiter">'</span></span>, <span class="symbol">:type</span> <span class="keyword">do</span>&#x000A;  <span class="comment"># Without descriptions</span>&#x000A;  type.choose(<span class="symbol">:static</span>, <span class="symbol">:proxy</span>, <span class="symbol">:unicorn</span>)&#x000A;&#x000A;  <span class="comment"># Including descriptions</span>&#x000A;  type.choose(&#x000A;    <span class="symbol">:static</span> =&gt; <span class="string"><span class="delimiter">&quot;</span><span class="content">A statically served vhost</span><span class="delimiter">&quot;</span></span>,&#x000A;    <span class="symbol">:proxy</span> =&gt; <span class="string"><span class="delimiter">&quot;</span><span class="content">A vhost proxied to a custom host/port</span><span class="delimiter">&quot;</span></span>,&#x000A;    <span class="symbol">:unicorn</span> =&gt; <span class="string"><span class="delimiter">&quot;</span><span class="content">A vhost proxying to a unicorn via unix socket</span><span class="delimiter">&quot;</span></span>&#x000A;  )&#x000A;<span class="keyword">end</span></span></code></pre>
+      <p>This explains why dep parameters aren&#8217;t just block parameters, like this:</p>
+      <pre><code class='ruby'><span class="CodeRay">dep <span class="string"><span class="delimiter">'</span><span class="content">git</span><span class="delimiter">'</span></span>, <span class="keyword">do</span> |version| <span class="comment"># This wouldn't work.</span>&#x000A;  <span class="comment"># ...</span>&#x000A;<span class="keyword">end</span></span></code></pre>
+      <p>Local variables aren&#8217;t available in helper methods, which don&#8217;t close over the scope they&#8217;re defined in. But more importantly, for chained defaults and lazy prompting to work, referencing parameters has to be a method call.</p>
+      
+      <h3 id="parameter-limitations">Parameter limitations</h3>
+      
+      <p>Dep parameters do have some limitations, mainly stemming from the fact that they&#8217;re Parameter objects wrapping their values, not the values themselves.</p>
+      
+      <p>In most situations, parameters will convert and compare as strings correctly. For example given a parameter &#8216;param&#8217;, these cases will all work as expected:</p>
+      <pre><code class='ruby'><span class="CodeRay">param == <span class="string"><span class="delimiter">'</span><span class="content">value</span><span class="delimiter">'</span></span>&#x000A;param[<span class="regexp"><span class="delimiter">/</span><span class="content">value</span><span class="delimiter">/</span></span>]&#x000A;<span class="constant">File</span>.exists?(param)&#x000A;<span class="constant">Regexp</span>.escape(param)</span></code></pre>
+      <p>In cases where there is no default conversion, or it&#8217;s not the one we expect, though, the param will fail:</p>
+      <pre><code class='ruby'><span class="CodeRay"><span class="comment"># This will fail: the default conversion here is `#to_i`,</span>&#x000A;<span class="comment"># which isn't defined on Parameter.</span>&#x000A;<span class="string"><span class="delimiter">'</span><span class="content">value</span><span class="delimiter">'</span></span>[arg]&#x000A;&#x000A;<span class="comment"># This will fail too: the key is the param's value, not</span>&#x000A;<span class="comment"># the param itself, so nil is returned.</span>&#x000A;{<span class="string"><span class="delimiter">'</span><span class="content">key</span><span class="delimiter">'</span></span> =&gt; <span class="string"><span class="delimiter">'</span><span class="content">val</span><span class="delimiter">'</span></span>}[arg]</span></code></pre>
+      <p>In those cases, we just need to convert the parameter explicitly:</p>
+      <pre><code class='ruby'><span class="CodeRay"><span class="string"><span class="delimiter">'</span><span class="content">value</span><span class="delimiter">'</span></span>[arg.to_s]&#x000A;{<span class="string"><span class="delimiter">'</span><span class="content">key</span><span class="delimiter">'</span></span> =&gt; <span class="string"><span class="delimiter">'</span><span class="content">val</span><span class="delimiter">'</span></span>}[arg.to_s]</span></code></pre>
+      <p>Some proxy objects solve this by becoming transparent to the caller via <code>#method_missing</code>. Doing so could solve these cases, but I think it makes debugging too susprising: it effectively creates an invisible object. I think the occasional bit of explicitness to maintain predictability is the right tradeoff.</p>
+      
+      <h2 id="templated-deps">Templated Deps</h2>
+      
+      <p>The basic dep, with just <code>requires</code>, <code>met?</code> and <code>meet</code>, is all you need to describe an end goal. But this generic nature of <code>met?</code> and <code>meet</code> means just as they&#8217;re general purpose, they can lack focus. For example, installing an app using the system&#8217;s package manager has a predictable <code>met?</code> block&#8212;check whether the package is present and its binaries are in the path.</p>
+      
+      <p>A lot of chores are variations on a theme like this, or just too cumbersome to do repeatedly at a low level. So babushka provides a way to write dep templates, or <em>meta deps</em>, that can be reused later. These meta deps allow you to focus the DSL, and make it even more concise.</p>
+      
+      <p>For example, Babushka ships with a meta dep that knows how to install TextMate bundles, given just the URL. All the actual logic, including the code for <code>met?</code> and <code>meet</code>, is wrapped up in the meta dep.</p>
+      <pre><code class='ruby'><span class="CodeRay">meta <span class="symbol">:tmbundle</span> <span class="keyword">do</span>&#x000A;  accepts_value_for <span class="symbol">:source</span>&#x000A;&#x000A;  template {&#x000A;    requires <span class="string"><span class="delimiter">'</span><span class="content">TextMate.app</span><span class="delimiter">'</span></span>&#x000A;    <span class="keyword">def</span> <span class="function">path</span>&#x000A;      <span class="string"><span class="delimiter">'</span><span class="content">~/Library/Application Support/TextMate/Bundles</span><span class="delimiter">'</span></span> / name&#x000A;    <span class="keyword">end</span>&#x000A;    met? {&#x000A;      path.dir?&#x000A;    }&#x000A;    meet {&#x000A;      path.parent.mkdir&#x000A;      git source, <span class="symbol">:to</span> =&gt; path&#x000A;      shell <span class="string"><span class="delimiter">%Q{</span><span class="content">osascript -e 'tell app &quot;TextMate&quot; to reload bundles'</span><span class="delimiter">}</span></span>&#x000A;    }&#x000A;  }&#x000A;<span class="keyword">end</span></span></code></pre>
+      <p>Notice how the contents of the <code>template</code> block looks like a normal dep. That&#8217;s because it is &#8211; the meta dep is a factory that produces deps with their met? and meet blocks already set (they can be overridden in the dep, though).</p>
+      
+      <p>Also notice the item outside the template: <code>accepts_value_for</code>. This call is actually part of a second DSL on top of which babushka&#8217;s real DSL is built. That call means that deps defined against this template have a new DSL method, &#8216;source&#8217;, that can set and return a value:</p>
+      <pre><code class='ruby'><span class="CodeRay">meta <span class="symbol">:tmbundle</span> <span class="keyword">do</span>&#x000A;  accepts_value_for <span class="symbol">:source</span>&#x000A;  <span class="comment"># ...</span>&#x000A;<span class="keyword">end</span>&#x000A;&#x000A;dep <span class="string"><span class="delimiter">'</span><span class="content">Rspec.tmbundle</span><span class="delimiter">'</span></span>&#x000A;  source <span class="string"><span class="delimiter">'</span><span class="content">https://github.com/dchelimsky/rspec-tmbundle.git</span><span class="delimiter">'</span></span>&#x000A;  meet {&#x000A;    log <span class="string"><span class="delimiter">&quot;</span><span class="content">This dep would install from </span><span class="inline"><span class="inline-delimiter">#{</span>source<span class="inline-delimiter">}</span></span><span class="content">.</span><span class="delimiter">&quot;</span></span>&#x000A;  }&#x000A;<span class="keyword">end</span></span></code></pre>
+      <p>In fact, this is how the entire babushka DSL is built: <code>met?</code>, <code>meet</code>, and so on are defined in just the same way. The only difference is <em>where</em> they&#8217;re defined: they&#8217;re found on <a href="https://github.com/benhoskings/babushka/blob/master/lib/babushka/dep_context.rb">the base template</a>, so they&#8217;re available in all deps.</p>
+      
+      <p>Let&#8217;s look again at the rspec dep we defined above, against the &#8216;tmbundle&#8217; template.</p>
+      <pre><code class='ruby'><span class="CodeRay">dep <span class="string"><span class="delimiter">'</span><span class="content">Rspec.tmbundle</span><span class="delimiter">'</span></span>&#x000A;  source <span class="string"><span class="delimiter">'</span><span class="content">https://github.com/dchelimsky/rspec-tmbundle.git</span><span class="delimiter">'</span></span>&#x000A;<span class="keyword">end</span></span></code></pre>
+      <p>Notice there&#8217;s no imperative code there at all&#8212;just declarations. That&#8217;s what the DSL aims for. Instead of saying &#8220;do this, then do this, then do this&#8221;, the code should say &#8220;here&#8217;s a description of the problem, now you work it out.&#8221; Also notice that there&#8217;s no TextMate-specific logic. Adding this extra level of abstraction means all that&#8217;s left are the specifics for <em>this</em> TextMate bundle.</p>
+    </article>
+  </body>
+</html>

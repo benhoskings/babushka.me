@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang='en'>
+  <head>
+    <meta charset='utf-8'>
+    <title>Running babushka - babushka</title>
+    <link href='/styles/styles.css' media='screen' rel='stylesheet' type='text/css'>
+    <meta content='pith 0.2.3' name='generator'>
+    <meta content='width = 688' name='viewport'>
+    <script>
+      if (navigator.userAgent.match(/MSIE/)) {
+        ie_version = navigator.userAgent.match(/MSIE (\d+)/)[1]
+        document.getElementsByTagName('html')[0].className = 'ie' + ie_version
+      }
+    </script>
+    <!--[if lte IE 8]>
+      <script>
+        // html5shiv MIT @rem remysharp.com/html5-enabling-script
+        // iepp v1.6.2 MIT @jon_neal iecss.com/print-protector
+        /*@cc_on(function(m,c){var z="abbr|article|aside|audio|canvas|details|figcaption|figure|footer|header|hgroup|mark|meter|nav|output|progress|section|summary|time|video";function n(d){for(var a=-1;++a<o;)d.createElement(i[a])}function p(d,a){for(var e=-1,b=d.length,j,q=[];++e<b;){j=d[e];if((a=j.media||a)!="screen")q.push(p(j.imports,a),j.cssText)}return q.join("")}var g=c.createElement("div");g.innerHTML="<z>i</z>";if(g.childNodes.length!==1){var i=z.split("|"),o=i.length,s=RegExp("(^|\\s)("+z+")",
+        "gi"),t=RegExp("<(/*)("+z+")","gi"),u=RegExp("(^|[^\\n]*?\\s)("+z+")([^\\n]*)({[\\n\\w\\W]*?})","gi"),r=c.createDocumentFragment(),k=c.documentElement;g=k.firstChild;var h=c.createElement("body"),l=c.createElement("style"),f;n(c);n(r);g.insertBefore(l,
+        g.firstChild);l.media="print";m.attachEvent("onbeforeprint",function(){var d=-1,a=p(c.styleSheets,"all"),e=[],b;for(f=f||c.body;(b=u.exec(a))!=null;)e.push((b[1]+b[2]+b[3]).replace(s,"$1.iepp_$2")+b[4]);for(l.styleSheet.cssText=e.join("\n");++d<o;){a=c.getElementsByTagName(i[d]);e=a.length;for(b=-1;++b<e;)if(a[b].className.indexOf("iepp_")<0)a[b].className+=" iepp_"+i[d]}r.appendChild(f);k.appendChild(h);h.className=f.className;h.innerHTML=f.innerHTML.replace(t,"<$1font")});m.attachEvent("onafterprint",
+        function(){h.innerHTML="";k.removeChild(h);k.appendChild(f);l.styleSheet.cssText=""})}})(this,document);@*/
+      </script>
+    <![endif]-->
+  </head>
+  <body class='running-babushka'>
+    <aside role='contentinfo'>
+      <a class='ref' href='https://github.com/benhoskings/babushka.me/commit/45f6c29' rel='external'>45f6c29</a>
+    </aside>
+    <h1>
+      <a href='/'>
+        Babushka: test-driven sysadmin.
+      </a>
+    </h1>
+    <section class='nav-wrapper'>
+      <nav>
+        <section class='doll'>
+          <img alt='babushka logo' src='/images/babushka.png'>
+        </section>
+        <section>
+          <h2>&nbsp;&nbsp;&nbsp;&nbsp;Hello</h2>
+          <p>
+            <a href='/overview'>Overview</a>
+            <a href='/installing'>Installing</a>
+          </p>
+        </section>
+        <section>
+          <h2>Equipment</h2>
+          <p>
+            <a href='/running-babushka'>Running babushka</a>
+            <a href='/finding-deps'>Finding deps</a>
+            <a href='/dep-sources'>Dep sources</a>
+            <a href='/running-deps'>Running deps</a>
+          </p>
+        </section>
+        <section>
+          <h2>Materials</h2>
+          <p>
+            <a href='/how-deps-work'>How deps work</a>
+            <a href='/writing-deps'>Writing deps</a>
+            <a href='/dep-examples'>Dep examples</a>
+          </p>
+        </section>
+        <section class='links'>
+          <h2>&nbsp;&nbsp;&nbsp;&nbsp;Links</h2>
+          <p>
+            <a href='http://github.com/benhoskings/babushka'>github</a>
+            <a href='http://rubydoc.info/github/benhoskings/babushka/master/frames'>rdoc</a>
+            <a href='http://groups.google.com/group/babushka_app/topics'>mailing list</a>
+          </p>
+        </section>
+      </nav>
+    </section>
+    <article>
+      <h1>Running babushka</h1>
+      
+      <h2 id="commandline-syntax">Commandline Syntax</h2>
+      
+      <p>Babushka uses the subcommand &amp; options commandline style, similar to <code>git</code>, <code>gem</code> and <code>bundle</code>. To see the commands available:</p>
+      
+      <pre><code>$ babushka help
+      </code></pre>
+      
+      <p>For more details on options and arguments, check the help output for a specific subcommand:</p>
+      
+      <pre><code>$ babushka help meet
+      </code></pre>
+      
+      <p>You can abbreviate subcommands as long as they remain unique; at present, each one can be abbreviated to a single letter without any ambiguity.</p>
+      
+      <h2 id="running-deps">Running deps</h2>
+      
+      <p>To run deps, use the “meet” subcommand, passing the dep names you’re after as arguments. But “meet” is also the default subcommand, so the best way to run deps is to just pass them as arguments, straight up. For example, to run the built-in “rubygems” dep:</p>
+      
+      <pre><code>$ babushka rubygems
+      </code></pre>
+      
+      <p>Note that this doesn’t mean “install rubygems”; that’s too imperative and not <a href="/how-deps-work">how deps work</a>. Instead, it means “check whether rubygems is up-to-date, installing or updating as required”. It’s the goal, not the action that gets you there, that’s important. For more info, check the section on <a href="/running-deps">running deps</a>.</p>
+      
+      <p>If something isn’t working, you have a list of things that <em>aren’t</em> the culprit: everything in the output with a green ✓ beside it. Conversely, if babushka can detect the problem, the failing dep will have a red ✗ beside it instead, which leads you straight to the cause of the problem. Test-driven sysadmin!</p>
+      
+      <h2 id="the-babushka-console">The babushka console</h2>
+      
+      <p>Although babushka is predominantly a commandline app, it’s not implemented that way. All the commandline functionality is available at a ruby console too:</p>
+      
+      <pre><code>$ babushka console
+      </code></pre>
+      
+      <p>To properly recreate the runtime environment, mix in the babushka DSL:</p>
+      
+      <pre><code>&gt;&gt; include Babushka::DSL
+      </code></pre>
+      
+      <p>Here are some brief examples for using the console. To meet a dep:</p>
+      
+      <pre><code>&gt;&gt; Dep('rubygems').meet
+      </code></pre>
+      
+      <p>To check if a dep is met (i.e. what <code>--dry-run</code> does):</p>
+      
+      <pre><code>&gt;&gt; Dep('homebrew').met?
+      </code></pre>
+      
+      <p>To run shell commands using babushka:</p>
+      
+      <pre><code>&gt;&gt; include Babushka::ShellHelpers
+      &gt;&gt; shell './configure', '--prefix=/usr/local', log: true
+      </code></pre>
+      
+      <p>To run basic git operations:</p>
+      
+      <pre><code>&gt;&gt; repo = Babushka::GitRepo.new('/some/path')
+      &gt;&gt; repo.branches.include?('topic')
+      </code></pre>
+      
+      <h2 id="using-babushka-as-a-library">Using babushka as a library</h2>
+      
+      <p>All the babushka console does is start an irb session, requiring ‘lib/babushka’. Hence, everything will work as expected if you require ‘lib/babushka’ in a program of your own and then use babushka programatically.</p>
+      
+      <p>The top-level methods like <code>dep</code> and <code>meta</code> won’t be included by default; you can <code>include Babushka::DSL</code> to add them to whatever scope you like.</p>
+      
+      <p>The only caveat to be aware of is that babushka does monkey-patch some convenience methods onto core classes, like <code>Array#collapse</code> and <code>String#p</code>. If babushka’s primary use was as a library then I wouldn’t be patching in this way, but I think it’s a worthwhile tradeoff for the concise deps that the patches allow you to write.</p>
+      
+      <h2 id="logs">Logs</h2>
+      
+      <p>As was mentioned above, the <code>--debug</code> option causes babushka to print more verbose information as it runs. Shell commands will print their full output as they run, and babushka will print details about its own operation – for example, it will print a message as it lazily defines each dep.</p>
+      
+      <p>If an exception is raised, then by default, babushka prints the exception message, and the step in the backtrace that occurred within your dep, if any. When <code>--debug</code> is passed, though, babushka prints the full backtrace.</p>
+      
+      <p>All this information is too verbose to print all the time, so you’ll probably only want to use <code>--debug</code> when you’re troubleshooting a dep, or hacking on babushka itself. But sometimes it’s useful to look at debugging information after the fact, and so babushka always writes the full debug log to <code>~/.babushka/logs/&lt;dep name&gt;</code> – whether <code>--debug</code> was passed or not.</p>
+      
+      <p>You can start viewing the debugging information for a run that’s already in progress too, since babushka writes to the log in realtime. If you’ve started a babushka run, or would like to troubleshoot a long-running process or similar, just follow its debug log with <code>tail</code>:</p>
+      
+      <pre><code>$ tail -f ~/.babushka/logs/&lt;dep name&gt;
+      </code></pre>
+      
+      <p>You’ll see the full debug log echoed to the terminal as babushka writes it – just as if you’d originally run babushka with <code>--debug</code>.</p>
+    </article>
+  </body>
+</html>

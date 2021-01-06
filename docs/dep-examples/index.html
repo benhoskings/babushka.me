@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang='en'>
+  <head>
+    <meta charset='utf-8'>
+    <title>Dep examples - babushka</title>
+    <link href='/styles/styles.css' media='screen' rel='stylesheet' type='text/css'>
+    <meta content='pith 0.2.3' name='generator'>
+    <meta content='width = 688' name='viewport'>
+    <script>
+      if (navigator.userAgent.match(/MSIE/)) {
+        ie_version = navigator.userAgent.match(/MSIE (\d+)/)[1]
+        document.getElementsByTagName('html')[0].className = 'ie' + ie_version
+      }
+    </script>
+    <!--[if lte IE 8]>
+      <script>
+        // html5shiv MIT @rem remysharp.com/html5-enabling-script
+        // iepp v1.6.2 MIT @jon_neal iecss.com/print-protector
+        /*@cc_on(function(m,c){var z="abbr|article|aside|audio|canvas|details|figcaption|figure|footer|header|hgroup|mark|meter|nav|output|progress|section|summary|time|video";function n(d){for(var a=-1;++a<o;)d.createElement(i[a])}function p(d,a){for(var e=-1,b=d.length,j,q=[];++e<b;){j=d[e];if((a=j.media||a)!="screen")q.push(p(j.imports,a),j.cssText)}return q.join("")}var g=c.createElement("div");g.innerHTML="<z>i</z>";if(g.childNodes.length!==1){var i=z.split("|"),o=i.length,s=RegExp("(^|\\s)("+z+")",
+        "gi"),t=RegExp("<(/*)("+z+")","gi"),u=RegExp("(^|[^\\n]*?\\s)("+z+")([^\\n]*)({[\\n\\w\\W]*?})","gi"),r=c.createDocumentFragment(),k=c.documentElement;g=k.firstChild;var h=c.createElement("body"),l=c.createElement("style"),f;n(c);n(r);g.insertBefore(l,
+        g.firstChild);l.media="print";m.attachEvent("onbeforeprint",function(){var d=-1,a=p(c.styleSheets,"all"),e=[],b;for(f=f||c.body;(b=u.exec(a))!=null;)e.push((b[1]+b[2]+b[3]).replace(s,"$1.iepp_$2")+b[4]);for(l.styleSheet.cssText=e.join("\n");++d<o;){a=c.getElementsByTagName(i[d]);e=a.length;for(b=-1;++b<e;)if(a[b].className.indexOf("iepp_")<0)a[b].className+=" iepp_"+i[d]}r.appendChild(f);k.appendChild(h);h.className=f.className;h.innerHTML=f.innerHTML.replace(t,"<$1font")});m.attachEvent("onafterprint",
+        function(){h.innerHTML="";k.removeChild(h);k.appendChild(f);l.styleSheet.cssText=""})}})(this,document);@*/
+      </script>
+    <![endif]-->
+  </head>
+  <body class='dep-examples'>
+    <aside role='contentinfo'>
+      <a class='ref' href='https://github.com/benhoskings/babushka.me/commit/45f6c29' rel='external'>45f6c29</a>
+    </aside>
+    <h1>
+      <a href='/'>
+        Babushka: test-driven sysadmin.
+      </a>
+    </h1>
+    <section class='nav-wrapper'>
+      <nav>
+        <section class='doll'>
+          <img alt='babushka logo' src='/images/babushka.png'>
+        </section>
+        <section>
+          <h2>&nbsp;&nbsp;&nbsp;&nbsp;Hello</h2>
+          <p>
+            <a href='/overview'>Overview</a>
+            <a href='/installing'>Installing</a>
+          </p>
+        </section>
+        <section>
+          <h2>Equipment</h2>
+          <p>
+            <a href='/running-babushka'>Running babushka</a>
+            <a href='/finding-deps'>Finding deps</a>
+            <a href='/dep-sources'>Dep sources</a>
+            <a href='/running-deps'>Running deps</a>
+          </p>
+        </section>
+        <section>
+          <h2>Materials</h2>
+          <p>
+            <a href='/how-deps-work'>How deps work</a>
+            <a href='/writing-deps'>Writing deps</a>
+            <a href='/dep-examples'>Dep examples</a>
+          </p>
+        </section>
+        <section class='links'>
+          <h2>&nbsp;&nbsp;&nbsp;&nbsp;Links</h2>
+          <p>
+            <a href='http://github.com/benhoskings/babushka'>github</a>
+            <a href='http://rubydoc.info/github/benhoskings/babushka/master/frames'>rdoc</a>
+            <a href='http://groups.google.com/group/babushka_app/topics'>mailing list</a>
+          </p>
+        </section>
+      </nav>
+    </section>
+    <article>
+      <h1>Dep examples</h1>
+      <p>A dep should handle just one specific task in isolation. For example, admins being able to sudo is really two separate jobs: &#8220;the admin group exists&#8221; and &#8220;the sudoers entry for admins exists&#8221;.</p>
+      
+      <p>Keeping deps really small and simple makes them (a) easier to write, (b) much more robust, and (c) really easy for other people to re-use.</p>
+      <pre><code class='ruby'><span class="CodeRay">dep <span class="string"><span class="delimiter">'</span><span class="content">admin group</span><span class="delimiter">'</span></span> <span class="keyword">do</span>&#x000A;  <span class="comment"># Returns a bool (i.e. &quot;is this dep met?&quot;)</span>&#x000A;  met? { <span class="string"><span class="delimiter">'</span><span class="content">/etc/group</span><span class="delimiter">'</span></span>.p.grep(<span class="regexp"><span class="delimiter">/</span><span class="content">^admin</span><span class="char">\:</span><span class="delimiter">/</span></span>) }&#x000A;&#x000A;  <span class="comment"># Blindly do whatever is required to meet the dep.</span>&#x000A;  meet { shell <span class="string"><span class="delimiter">&quot;</span><span class="content">groupadd admin</span><span class="delimiter">&quot;</span></span> }&#x000A;<span class="keyword">end</span></span></code></pre>
+      <p>The dep name can be any string. Keep it nice and simple, though, because you have to type it on the commandline to run the dep.</p>
+      <pre><code class='ruby'><span class="CodeRay">dep <span class="string"><span class="delimiter">'</span><span class="content">admins can sudo</span><span class="delimiter">'</span></span> <span class="keyword">do</span>&#x000A;  <span class="comment"># A list of the names of all the deps this one requires.</span>&#x000A;  requires <span class="string"><span class="delimiter">'</span><span class="content">admin group</span><span class="delimiter">'</span></span>&#x000A;&#x000A;  <span class="comment"># The met? block should never make any changes to the system. It</span>&#x000A;  <span class="comment"># should only ever inspect the system, and return true/false.</span>&#x000A;  met? {&#x000A;    <span class="comment"># There are lots of helpers to do things like edit files and</span>&#x000A;    <span class="comment"># render configs. Check the API for a full list.</span>&#x000A;    !<span class="string"><span class="delimiter">'</span><span class="content">/etc/sudoers</span><span class="delimiter">'</span></span>.p.read.split(<span class="string"><span class="delimiter">&quot;</span><span class="char">\n</span><span class="delimiter">&quot;</span></span>).grep(<span class="regexp"><span class="delimiter">/</span><span class="content">^%admin</span><span class="delimiter">/</span></span>).empty?&#x000A;  }&#x000A;&#x000A;  <span class="comment"># The meet block should never do any checks. It should just</span>&#x000A;  <span class="comment"># unconditionally make all the changes. If you find you need to</span>&#x000A;  <span class="comment"># use non-trivial conditionals within meet {}, it probably means</span>&#x000A;  <span class="comment"># you should split this dep up into smaller, more focused deps.</span>&#x000A;  meet {&#x000A;    <span class="string"><span class="delimiter">'</span><span class="content">/etc/sudoers</span><span class="delimiter">'</span></span>.p.append(<span class="string"><span class="delimiter">'</span><span class="content">%admin  ALL=(ALL) ALL</span><span class="delimiter">'</span></span>)&#x000A;  }&#x000A;<span class="keyword">end</span></span></code></pre>
+      <p>As well as the most basic dep, with #requires, #met? and #meet, you can use templates to wrap up met?/meet logic and focus the DSL for whatever task you like.</p>
+      
+      <p>The &#8216;bin&#8217; and &#8216;lib&#8217; templates are for installing binaries and libraries via the system&#8217;s package manager. Their logic is simple:</p>
+      
+      <p>- in the met? block, &#8216;bin&#8217; checks whether its binaries are in the path, and &#8216;lib&#8217; checks whether its libraries&#8217; packages are installed;
+      - in the meet block, both &#8216;bin&#8217; and &#8216;lib&#8217; just ask PkgHelper to install the appropriate packages via the system&#8217;s package manager.</p>
+      
+      <p>You don&#8217;t have to tell them what kind of system you&#8217;re on because babushka works that out. Currently PkgHelper knows how to use homebrew (on OS X), apt (on Debian/Ubuntu), yum (on Fedora/CentOS), and pacman (on Arch).</p>
+      <pre><code class='ruby'><span class="CodeRay"><span class="comment"># If the defaults are what you want (check for the 'wget' binary,</span>&#x000A;<span class="comment"># and install the 'wget' package to add it), you don't need to</span>&#x000A;<span class="comment"># customise at all.</span>&#x000A;dep <span class="string"><span class="delimiter">'</span><span class="content">wget.bin</span><span class="delimiter">'</span></span></span></code></pre>
+      <p>To tweak the package, there are some package-specific methods you can use.</p>
+      <pre><code class='ruby'><span class="CodeRay">dep <span class="string"><span class="delimiter">'</span><span class="content">git.bin</span><span class="delimiter">'</span></span> <span class="keyword">do</span>&#x000A;  <span class="comment"># Use 'installs' to list the packages this dep should install.</span>&#x000A;  <span class="comment"># You can pass an array, or any number of splatted arguments.</span>&#x000A;  <span class="comment"># It defaults to the package name - in this case, it would</span>&#x000A;  <span class="comment"># default to 'git'.</span>&#x000A;  installs <span class="string"><span class="delimiter">'</span><span class="content">git-core</span><span class="delimiter">'</span></span>&#x000A;<span class="keyword">end</span></span></code></pre>
+      <pre><code class='ruby'><span class="CodeRay">dep <span class="string"><span class="delimiter">'</span><span class="content">ruby</span><span class="delimiter">'</span></span>, <span class="symbol">:template</span> =&gt; <span class="string"><span class="delimiter">'</span><span class="content">bin</span><span class="delimiter">'</span></span> <span class="keyword">do</span>&#x000A;  <span class="comment"># You can split any of these lists per-system with a block,</span>&#x000A;  <span class="comment"># like so:</span>&#x000A;  installs {&#x000A;    via [<span class="symbol">:lenny</span>, <span class="symbol">:hardy</span>, <span class="symbol">:lucid</span>], <span class="string"><span class="delimiter">%w[</span><span class="content">ruby irb ruby1.8-dev libopenssl-ruby</span><span class="delimiter">]</span></span>&#x000A;    via <span class="symbol">:apt</span>, <span class="string"><span class="delimiter">%w[</span><span class="content">ruby ruby1.8-dev</span><span class="delimiter">]</span></span>&#x000A;    via <span class="symbol">:yum</span>, <span class="string"><span class="delimiter">%w[</span><span class="content">ruby ruby-irb</span><span class="delimiter">]</span></span>&#x000A;    otherwise <span class="string"><span class="delimiter">'</span><span class="content">ruby</span><span class="delimiter">'</span></span>&#x000A;  }&#x000A;  <span class="comment"># Use 'provides' to specify the executeables this package</span>&#x000A;  <span class="comment"># should add to the PATH. Babushka checks both that the</span>&#x000A;  <span class="comment"># commands are available, and that they all run from the same</span>&#x000A;  <span class="comment"># path (so, for example, you're not running /usr/bin/gem against</span>&#x000A;  <span class="comment"># /usr/local/bin/ruby).</span>&#x000A;  provides <span class="string"><span class="delimiter">'</span><span class="content">ruby &gt;= 1.8.6</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">irb</span><span class="delimiter">'</span></span>&#x000A;<span class="keyword">end</span></span></code></pre>
+      <p>To install a library, you don&#8217;t need to worry about setting &#8216;provides&#8217;, because
+      a library provides no binaries. Just list the packages involved.</p>
+      <pre><code class='ruby'><span class="CodeRay">dep <span class="string"><span class="delimiter">'</span><span class="content">ncurses.lib</span><span class="delimiter">'</span></span> <span class="keyword">do</span>&#x000A;  installs {&#x000A;    via <span class="symbol">:apt</span>, <span class="string"><span class="delimiter">'</span><span class="content">libncurses5-dev</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">libncursesw5-dev</span><span class="delimiter">'</span></span>&#x000A;    via <span class="symbol">:brew</span>, <span class="string"><span class="delimiter">'</span><span class="content">ncursesw</span><span class="delimiter">'</span></span>&#x000A;  }&#x000A;<span class="keyword">end</span></span></code></pre>
+      <p>As well as the &#8216;bin&#8217; and &#8216;lib&#8217; templates, you can use &#8216;gem&#8217;, &#8216;npm&#8217;, and &#8216;pip&#8217; to
+      write deps that understand cross-platform package managers.</p>
+      
+      <p>For example, to install the image_science gem, which needs the &#8216;freeimage&#8217;
+      library and installs no commands:</p>
+      <pre><code class='ruby'><span class="CodeRay">dep <span class="string"><span class="delimiter">'</span><span class="content">image_science.gem</span><span class="delimiter">'</span></span> <span class="keyword">do</span>&#x000A;  requires <span class="string"><span class="delimiter">'</span><span class="content">freeimage</span><span class="delimiter">'</span></span>&#x000A;  provides []&#x000A;<span class="keyword">end</span></span></code></pre>
+      <p>You can specify specific versions using any gem version operator.</p>
+      <pre><code class='ruby'><span class="CodeRay">dep <span class="string"><span class="delimiter">'</span><span class="content">unicorn.gem</span><span class="delimiter">'</span></span> <span class="keyword">do</span>&#x000A;  <span class="comment"># This will install the latest available unicorn-0.4 gem.</span>&#x000A;  installs <span class="string"><span class="delimiter">'</span><span class="content">unicorn ~&gt; 0.4.0</span><span class="delimiter">'</span></span>&#x000A;<span class="keyword">end</span></span></code></pre>
+      <p>Those version operators aren&#8217;t just for gem versions, though &#8211; you can use
+      them on other packages, and to check versions in other situations.</p>
+      <pre><code class='ruby'><span class="CodeRay">dep <span class="string"><span class="delimiter">'</span><span class="content">postgres.bin</span><span class="delimiter">'</span></span> <span class="keyword">do</span>&#x000A;  installs <span class="string"><span class="delimiter">'</span><span class="content">postgresql</span><span class="delimiter">'</span></span>&#x000A;  <span class="comment"># This checks the installed version by running `psql --version`</span>&#x000A;  <span class="comment"># and parsing the output. Most commands support --version, and</span>&#x000A;  <span class="comment"># this provides a consistent interface to it.</span>&#x000A;  provides <span class="string"><span class="delimiter">'</span><span class="content">psql ~&gt; 9.0.0</span><span class="delimiter">'</span></span>&#x000A;<span class="keyword">end</span></span></code></pre>
+      <p>Here&#8217;s an example of installing an npm package. It&#8217;s much the same as the
+      others &#8211; just set #installs and #provides as required. Here we&#8217;re installing
+      &#8216;juggernaut&#8217;, which provides a binary of the same name.</p>
+      <pre><code class='ruby'><span class="CodeRay">dep <span class="string"><span class="delimiter">'</span><span class="content">juggernaut.npm</span><span class="delimiter">'</span></span></span></code></pre>
+      <p>The same applies to pip too. The django pip needs to be customised though,
+      because the package name and binary don&#8217;t fit the convention.</p>
+      <pre><code class='ruby'><span class="CodeRay">dep <span class="string"><span class="delimiter">'</span><span class="content">django.pip</span><span class="delimiter">'</span></span> <span class="keyword">do</span>&#x000A;  installs <span class="string"><span class="delimiter">'</span><span class="content">Django</span><span class="delimiter">'</span></span>&#x000A;  provides <span class="string"><span class="delimiter">'</span><span class="content">django-admin.py</span><span class="delimiter">'</span></span>&#x000A;<span class="keyword">end</span></span></code></pre>
+      <p>You can use the &#8216;.src&#8217; template to build and install programs from source.</p>
+      <pre><code class='ruby'><span class="CodeRay">dep <span class="string"><span class="delimiter">'</span><span class="content">fish.src</span><span class="delimiter">'</span></span> <span class="keyword">do</span>&#x000A;  requires <span class="string"><span class="delimiter">'</span><span class="content">ncurses</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">doc</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">coreutils</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">sed</span><span class="delimiter">'</span></span>&#x000A;&#x000A;  <span class="comment"># Babushka will pull the source from here, and save it in</span>&#x000A;  <span class="comment"># ~/.babushka/src for later (i.e. it only ever downloads once).</span>&#x000A;  <span class="comment"># If the protocol is git:// then babushka will clone/update the</span>&#x000A;  <span class="comment"># repo as required, and for all other protocols, it defers to</span>&#x000A;  <span class="comment"># `curl`. Hence, babushka can handle any URI curl can, plus git://.</span>&#x000A;  source <span class="string"><span class="delimiter">&quot;</span><span class="content">https://github.com/benhoskings/fish.git</span><span class="delimiter">&quot;</span></span>&#x000A;&#x000A;  <span class="comment"># The 'provides' setting is just the same as in '.managed',</span>&#x000A;  <span class="comment"># '.gem', and others - it does all the same checks, and defaults</span>&#x000A;  <span class="comment"># to the package name:</span>&#x000A;  <span class="comment"># provides 'fish'</span>&#x000A;  <span class="comment">#</span>&#x000A;  <span class="comment"># As above though, you can use version operators to do a more</span>&#x000A;  <span class="comment"># specific check:</span>&#x000A;  provides <span class="string"><span class="delimiter">'</span><span class="content">fish &gt;= 1.23.1</span><span class="delimiter">'</span></span>&#x000A;&#x000A;  <span class="comment"># For generating the --prefix configure arg; defaults to</span>&#x000A;  <span class="comment"># /usr/local.</span>&#x000A;  <span class="comment"># prefix '/usr/local'</span>&#x000A;&#x000A;  <span class="comment"># This is run before configure. It defauls to running autoconf,</span>&#x000A;  <span class="comment"># if ./configure doesn't already exist but its inputs (configure.in</span>&#x000A;  <span class="comment"># or configure.ac) do.</span>&#x000A;  <span class="comment"># preconfigure { shell &quot;autoconf&quot; }</span>&#x000A;&#x000A;  <span class="comment"># Specify env vars to set for configure, to achieve e.g.</span>&#x000A;  <span class="comment"># KEY='val' ./configure</span>&#x000A;  configure_env <span class="string"><span class="delimiter">&quot;</span><span class="content">LDFLAGS='-liconv -L/opt/local/lib'</span><span class="delimiter">&quot;</span></span> <span class="keyword">if</span> host.osx?&#x000A;&#x000A;  <span class="comment"># Specify configure args, to achieve e.g.</span>&#x000A;  <span class="comment"># ./configure --with-feature</span>&#x000A;  configure_args <span class="string"><span class="delimiter">&quot;</span><span class="content">--without-xsel</span><span class="delimiter">&quot;</span></span>&#x000A;&#x000A;  <span class="comment"># Do the build. Default:</span>&#x000A;  <span class="comment"># build { shell &quot;make&quot; }</span>&#x000A;&#x000A;  <span class="comment"># Do the install. Default:</span>&#x000A;  <span class="comment"># install { sudo &quot;make install&quot; }</span>&#x000A;<span class="keyword">end</span></span></code></pre>
+    </article>
+  </body>
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang='en'>
+  <head>
+    <meta charset='utf-8'>
+    <title>Running Deps - babushka</title>
+    <link href='/styles/styles.css' media='screen' rel='stylesheet' type='text/css'>
+    <meta content='pith 0.2.3' name='generator'>
+    <meta content='width = 688' name='viewport'>
+    <script>
+      if (navigator.userAgent.match(/MSIE/)) {
+        ie_version = navigator.userAgent.match(/MSIE (\d+)/)[1]
+        document.getElementsByTagName('html')[0].className = 'ie' + ie_version
+      }
+    </script>
+    <!--[if lte IE 8]>
+      <script>
+        // html5shiv MIT @rem remysharp.com/html5-enabling-script
+        // iepp v1.6.2 MIT @jon_neal iecss.com/print-protector
+        /*@cc_on(function(m,c){var z="abbr|article|aside|audio|canvas|details|figcaption|figure|footer|header|hgroup|mark|meter|nav|output|progress|section|summary|time|video";function n(d){for(var a=-1;++a<o;)d.createElement(i[a])}function p(d,a){for(var e=-1,b=d.length,j,q=[];++e<b;){j=d[e];if((a=j.media||a)!="screen")q.push(p(j.imports,a),j.cssText)}return q.join("")}var g=c.createElement("div");g.innerHTML="<z>i</z>";if(g.childNodes.length!==1){var i=z.split("|"),o=i.length,s=RegExp("(^|\\s)("+z+")",
+        "gi"),t=RegExp("<(/*)("+z+")","gi"),u=RegExp("(^|[^\\n]*?\\s)("+z+")([^\\n]*)({[\\n\\w\\W]*?})","gi"),r=c.createDocumentFragment(),k=c.documentElement;g=k.firstChild;var h=c.createElement("body"),l=c.createElement("style"),f;n(c);n(r);g.insertBefore(l,
+        g.firstChild);l.media="print";m.attachEvent("onbeforeprint",function(){var d=-1,a=p(c.styleSheets,"all"),e=[],b;for(f=f||c.body;(b=u.exec(a))!=null;)e.push((b[1]+b[2]+b[3]).replace(s,"$1.iepp_$2")+b[4]);for(l.styleSheet.cssText=e.join("\n");++d<o;){a=c.getElementsByTagName(i[d]);e=a.length;for(b=-1;++b<e;)if(a[b].className.indexOf("iepp_")<0)a[b].className+=" iepp_"+i[d]}r.appendChild(f);k.appendChild(h);h.className=f.className;h.innerHTML=f.innerHTML.replace(t,"<$1font")});m.attachEvent("onafterprint",
+        function(){h.innerHTML="";k.removeChild(h);k.appendChild(f);l.styleSheet.cssText=""})}})(this,document);@*/
+      </script>
+    <![endif]-->
+  </head>
+  <body class='running-deps'>
+    <aside role='contentinfo'>
+      <a class='ref' href='https://github.com/benhoskings/babushka.me/commit/45f6c29' rel='external'>45f6c29</a>
+    </aside>
+    <h1>
+      <a href='/'>
+        Babushka: test-driven sysadmin.
+      </a>
+    </h1>
+    <section class='nav-wrapper'>
+      <nav>
+        <section class='doll'>
+          <img alt='babushka logo' src='/images/babushka.png'>
+        </section>
+        <section>
+          <h2>&nbsp;&nbsp;&nbsp;&nbsp;Hello</h2>
+          <p>
+            <a href='/overview'>Overview</a>
+            <a href='/installing'>Installing</a>
+          </p>
+        </section>
+        <section>
+          <h2>Equipment</h2>
+          <p>
+            <a href='/running-babushka'>Running babushka</a>
+            <a href='/finding-deps'>Finding deps</a>
+            <a href='/dep-sources'>Dep sources</a>
+            <a href='/running-deps'>Running deps</a>
+          </p>
+        </section>
+        <section>
+          <h2>Materials</h2>
+          <p>
+            <a href='/how-deps-work'>How deps work</a>
+            <a href='/writing-deps'>Writing deps</a>
+            <a href='/dep-examples'>Dep examples</a>
+          </p>
+        </section>
+        <section class='links'>
+          <h2>&nbsp;&nbsp;&nbsp;&nbsp;Links</h2>
+          <p>
+            <a href='http://github.com/benhoskings/babushka'>github</a>
+            <a href='http://rubydoc.info/github/benhoskings/babushka/master/frames'>rdoc</a>
+            <a href='http://groups.google.com/group/babushka_app/topics'>mailing list</a>
+          </p>
+        </section>
+      </nav>
+    </section>
+    <article>
+      <h1>Running Deps</h1>
+      <p>Running deps with babushka is simple. The form of the dep names varies depending on where the deps are located, but the way they’re run is always the same.</p>
+      
+      <h2 id="referencing-deps--sources">Referencing Deps &amp; Sources</h2>
+      
+      <p>If the dep you’re running is within one of babushka’s standard load paths (read about them <a href="/finding-deps">here</a>), then you can just reference the dep directly.</p>
+      
+      <pre><code>$ babushka homebrew&#x000A;</code></pre>
+      
+      <p>There are many more deps out there, though, which you might like to use (<a href="/finding-deps">when you trust them!</a>). You can run a dep from any source that’s published using babushka’s convention automatically:</p>
+      
+      <pre><code>$ babushka benhoskings:TextMate.app&#x000A;</code></pre>
+      
+      <p>That runs the dep called ‘TextMate.app’ in <a href="http://github.com/benhoskings/babushka-deps">my source</a>.</p>
+      
+      <h2 id="a-runtime-example">A runtime example</h2>
+      
+      <p>Here’s what babushka does when you run ‘Cucumber.tmbundle’ from my source, to install the Cucumber TextMate bundle. Each step of the way, it’s checking what should be done, and only doing the bits that aren’t done already. (In babushka parlance, it’s only meeting deps that aren’t already met.)</p>
+      
+      <p>If you already have TextMate installed, babushka notices and just installs the bundle.</p>
+      
+      <pre><code>$ babushka benhoskings:Cucumber.tmbundle&#x000A;Cucumber.tmbundle {&#x000A;  TextMate.app {&#x000A;    Found TextMate.app in /Applications.&#x000A;  } ✓ TextMate.app&#x000A;  meet {&#x000A;    Cloning git://github.com/bmabey/cucumber-tmbundle.git... at bb89925, done.&#x000A;    Telling TextMate to reload bundles... done.&#x000A;  }&#x000A;} ✓ Cucumber.tmbundle&#x000A;</code></pre>
+      
+      <p>But if you don’t have TextMate, that’s an unmet dependency, so it gets pulled in too.</p>
+      
+      <pre><code>$ babushka benhoskings:Cucumber.tmbundle&#x000A;Cucumber.tmbundle {&#x000A;  TextMate.app {&#x000A;    Couldn't find TextMate.app.&#x000A;    meet {&#x000A;      ✓ Already downloaded TextMate_1.5.10.zip.&#x000A;      Extracting TextMate_1.5.10.zip... done.&#x000A;      Found TextMate.app, copying to /Applications... done.&#x000A;      Cleaning up... done.&#x000A;    }&#x000A;    Found TextMate.app in /Applications.&#x000A;  } ✓ TextMate.app&#x000A;  meet {&#x000A;    Cloning git://github.com/bmabey/cucumber-tmbundle.git... at bb89925, done.&#x000A;    Telling TextMate to reload bundles... done.&#x000A;  }&#x000A;} ✓ Cucumber.tmbundle&#x000A;</code></pre>
+      
+      <h2 id="options">Options</h2>
+      
+      <p>There are several useful options to use when running deps. One to try out now is <code>--dry-run</code>, which will just check whether the dep in question (and its requirements) are met, without changing your system; babushka won’t attempt to meet unmet deps.</p>
+      
+      <p>Suppose the Cucumber bundle isn’t installed. If we kick off a dry run of the same dep as above, then we’ll see this:</p>
+      
+      <pre><code>$ babushka benhoskings:Cucumber.tmbundle --dry-run&#x000A;Cucumber.tmbundle {&#x000A;  TextMate.app {&#x000A;    Found TextMate.app in /Applications.&#x000A;  } ✓ TextMate.app&#x000A;} ~ Cucumber.tmbundle&#x000A;</code></pre>
+      
+      <p>Babushka has found that the bundle’s requirement, TextMate, is met, but the bundle itself is unmet. But rather than attempt to meet the dep, it’s just printed the state (indicated by ‘~’) and exited (if any dep in the tree is unmet, babushka exits with a non-zero status). See the argument section below for another <code>--dry-run</code> example.</p>
+      
+      <p>When writing deps, the option you’ll be after most regularly is <code>--debug</code>, which makes babushka much more verbose. In particular, output from long-running shell commands will be printed in realtime.</p>
+      
+      <pre><code>$ babushka rubygems --debug&#x000A;</code></pre>
+      
+      <p>A third useful option is <code>--defaults</code>, which causes babushka to run non-interactively so it doesn’t prompt for input at runtime.</p>
+      
+      <h2 id="passing-arguments-to-deps">Passing arguments to deps</h2>
+      
+      <p>Deps are, in some ways, like a method call - the outer block of the dep is run at the point the dep is defined, which happens lazily as it is invoked from its parent, or from the commandline if it’s the top-level dep.</p>
+      
+      <p>Like methods, deps can have parameters, and when you call the dep, you can pass values for those parameters, just like supplying arguments to a method call.</p>
+      
+      <p>There are more details on dep parameters in the section on <a href="/writing-deps">writing deps</a>. For now, the important part is that deps can always accept arguments, whether they’re run directly from the commandline, or required from another dep.</p>
+      
+      <p>To pass arguments on the commandline, use <code>name=value</code> pairs:</p>
+      
+      <pre><code>$ babushka benhoskings:push! ref=HEAD remote=production&#x000A;</code></pre>
+      
+      <p>Here’s a runtime example, passing the ‘version’ argument to babushka’s builtin ‘git’ dep (we’re also using <code>--dry-run</code> again here). If we pass a version that matches the installed version, then the dep is met:</p>
+      
+      <pre><code>$ babushka git version=1.8.0 --dry-run&#x000A;git {&#x000A;  'git' runs from /usr/local/bin.&#x000A;  ✓ git is 1.8.3.1, which is &gt;= 1.8.0.&#x000A;} ✓ git&#x000A;</code></pre>
+      
+      <p>But if we pass a version newer than the one we have installed, the dep is unmet.</p>
+      
+      <pre><code>$ babushka git version=1.8.5 --dry-run&#x000A;git {&#x000A;  'git' runs from /usr/local/bin.&#x000A;  git is 1.8.3.1, which isn't &gt;= 1.8.5.&#x000A;} ~ git&#x000A;</code></pre>
+      <pre><code class='ruby'><span class="CodeRay">dep <span class="string"><span class="delimiter">'</span><span class="content">custom nginx config</span><span class="delimiter">'</span></span> <span class="keyword">do</span>&#x000A;  requires <span class="string"><span class="delimiter">'</span><span class="content">benhoskings:nginx.src</span><span class="delimiter">'</span></span>.with(<span class="key">version</span>: <span class="string"><span class="delimiter">'</span><span class="content">1.0.8</span><span class="delimiter">'</span></span>)&#x000A;  <span class="comment"># ...</span>&#x000A;<span class="keyword">end</span></span></code></pre>
+      <p>You don&#8217;t have to supply values for a dep&#8217;s parameters when you call it; dep parameters can be unset, and will lazily prompt for values as required (i.e. at the point babushka attempts to use an unset parameter&#8217;s value). You can find more details about dep parameters in the <a href="/writing-deps">writing deps</a> section.</p>
+    </article>
+  </body>
+</html>
